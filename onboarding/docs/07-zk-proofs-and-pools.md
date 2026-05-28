@@ -97,6 +97,54 @@ logarithm assumption on the Pallas curve, the Halo 2 proof system
 is knowledge-sound in the random oracle model. No trusted setup is
 required.
 
+### Note commitment trees and the anchor
+
+The shielded proofs depend on a per-pool incremental Merkle tree
+whose leaves are note commitments. The root of that tree is the
+**anchor**, and every spend proof attests that the note being spent
+sits at a leaf below a known anchor. Without anchors there is no
+membership statement for the proof to attest; the anchor is what
+ties a spend to the public history of the chain.
+
+**Definition 7.6 (Note commitment tree).** For a pool $P \in
+\{\mathsf{Sprout}, \mathsf{Sapling}, \mathsf{Orchard}\}$ the note
+commitment tree $T_P$ is an append-only binary Merkle tree of fixed
+depth $d_P$ whose internal nodes are computed with the pool's
+in-circuit hash $H_P$:
+
+$$
+\mathsf{node}_{i,j} = H_P(\mathsf{node}_{i+1,2j}, \mathsf{node}_{i+1,2j+1})
+$$
+
+with leaves $\mathsf{node}_{d_P, k} = \mathsf{cm}_k$ for the $k$-th
+committed note. Empty positions are filled with the pool's
+domain-separated zero. Depths in zcashd: $d_{\mathsf{Sprout}} = 29$,
+$d_{\mathsf{Sapling}} = 32$, $d_{\mathsf{Orchard}} = 32$.
+
+**Definition 7.7 (Anchor).** An anchor at height $h$ for pool $P$
+is $\mathsf{rt}_P^{(h)} = \mathsf{node}_{0,0}$ of $T_P$ after every
+output / action in every block at height $\le h$ has been appended
+to $T_P$ in canonical (block, transaction, in-bundle) order.
+
+**Invariant 7.8 (Anchor membership).** A Sapling spend proof with
+public input $\mathsf{rt}$ is valid only if $\mathsf{rt} =
+\mathsf{rt}_{\mathsf{Sapling}}^{(h')}$ for some block height $h'$
+on the active chain with $h' \le h_{\mathsf{tip}}$. The verifier
+does not learn which $h'$. The same holds for Orchard with
+$T_{\mathsf{Orchard}}$ and for Sprout's separate tree. zcashd
+enforces this by looking up the candidate anchor in
+`CCoinsViewCache` before the proof is even passed to the Rust
+verifier.
+
+**Lemma 7.9 (Append-only consistency).** For $h_1 \le h_2$, the
+tree $T_P^{(h_1)}$ is a prefix (in append order) of $T_P^{(h_2)}$:
+$T_P^{(h_2)}$ is obtained from $T_P^{(h_1)}$ by appending a finite
+sequence of leaves. Therefore any leaf authenticated against
+$\mathsf{rt}_P^{(h_1)}$ is also authenticated against the deeper
+root $\mathsf{rt}_P^{(h_2)}$ (with a longer path). The wallet
+exploits this: a witness once constructed is updated incrementally
+rather than rebuilt.
+
 ### Data structures: where pools live in a transaction
 
 Read `src/primitives/transaction.h`. The `CTransaction` fields
@@ -119,6 +167,154 @@ The Orchard bundle is stored on the C++ side as an opaque pointer
 `orchard::Bundle`. All Orchard logic lives in Rust.
 
 ## 3. The code
+
+### Anchors and note commitment trees
+
+Anchors are the load-bearing object that connects every shielded
+proof to chain history. A spend proof attests "I know a note whose
+commitment is at some leaf below this root"; the verifier checks
+that the root is one that the chain has actually produced. This
+subsection walks the three places anchors live in the code: the
+in-memory and on-disk UTXO view, the block header, and the wallet
+witness.
+
+#### The trees themselves
+
+Sprout's tree is a plain C++ class, kept for historical
+compatibility:
+
+```cpp reference title="src/zcash/IncrementalMerkleTree.hpp (Sprout tree depths and types)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/zcash/IncrementalMerkleTree.hpp#L1-L80
+```
+
+Sapling and Orchard trees live in Rust, in the upstream
+`incrementalmerkletree` crate. The zcashd-side bridge exposes them
+to C++ via cxx and keeps the persisted **frontier** (the rightmost
+path needed to insert new commitments) in
+`src/rust/src/merkle_frontier.rs`:
+
+```rust reference title="src/rust/src/merkle_frontier.rs (Sapling and Orchard frontier types)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/rust/src/merkle_frontier.rs#L1-L80
+```
+
+The cxx bridge that hands these handles to the C++ side:
+
+```rust reference title="src/rust/src/incremental_merkle_tree.rs (FFI bridge)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/rust/src/incremental_merkle_tree.rs#L1-L80
+```
+
+Why a frontier rather than the whole tree? Storing all $2^{32}$
+leaves would be wasteful and unnecessary: any append-only Merkle
+tree of fixed depth can be incrementally extended given only the
+rightmost path. Reading the frontier file is the cleanest way to
+internalise this.
+
+#### Anchor storage in the UTXO view
+
+zcashd treats anchors as first-class entries in the same
+`CCoinsView` abstraction that owns transparent UTXOs. The view has
+explicit accessors for each pool's anchor and current best root:
+
+```cpp reference title="src/coins.h (CCoinsView anchor accessors)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/coins.h#L1-L80
+```
+
+The on-disk backing is LevelDB via
+[src/txdb.h](https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/txdb.h)
+and
+[src/txdb.cpp](https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/txdb.cpp):
+anchors and nullifier sets each get a dedicated key prefix in the
+`chainstate` database. The keys live under `~/.zcash/chainstate/`
+on a running node.
+
+In-memory the same accessors are layered through `CCoinsViewCache`,
+so that block-validation work touches a hot cache and only flushes
+to LevelDB at well-defined checkpoints (block connect/disconnect,
+flush thresholds, shutdown). This is the same caching pattern
+Bitcoin Core uses for transparent UTXOs.
+
+#### Update flow: ConnectBlock
+
+The anchor is updated exactly once per block, inside `ConnectBlock`
+in
+[src/main.cpp](https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/main.cpp).
+For each shielded bundle in transaction order:
+
+1. Read every note commitment from the bundle's output (Sapling) or
+   action (Orchard) descriptions.
+2. Append each commitment to the pool's tree via the cxx-bridged
+   incremental-tree handle.
+3. After the last commitment of the last bundle is appended, take
+   the new root.
+4. Write the new root back to `CCoinsViewCache` under the height of
+   the block being connected.
+5. Cross-check the new root against the block-header commitment
+   (`hashFinalSaplingRoot` for v4, the ZIP-244 `hashBlockCommitments`
+   bundle for v5). Reject the block if they disagree.
+
+On `DisconnectBlock` the reverse: pop the appended leaves off the
+frontier and restore the previous root. The wallet, which
+subscribed to `validationinterface.cpp`, rolls back its own
+witnesses in the same order.
+
+#### Block-header commitments
+
+The block header itself commits to the post-block anchor so that an
+SPV-style client can verify a proof without the chain state. The
+relevant fields are in
+[src/primitives/block.h](https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/primitives/block.h):
+
+```cpp reference title="src/primitives/block.h (CBlockHeader, including hashFinalSaplingRoot)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/primitives/block.h#L1-L80
+```
+
+The field was repurposed at NU5: pre-Heartwood it was
+`hashReserved` (unused), at Heartwood it became
+`hashLightClientRoot`, and at NU5 it became `hashBlockCommitments`
+per [ZIP-244](https://zips.z.cash/zip-0244). The semantics of
+`hashBlockCommitments` for NU5 are themselves a hash combining the
+Sapling root, the Orchard root, the chain-history root (ZIP-221),
+and the authorising-data digest. Read ZIP-244 alongside this code;
+the field-by-field layout is the consensus contract.
+
+#### Anchor lookup at validation time
+
+When a Sapling spend (or Orchard action) arrives, the verifier needs
+to confirm that the claimed anchor was a valid root at some past
+height. zcashd does this via `CCoinsView::HaveSaplingAnchor` and
+`CCoinsView::GetSaplingAnchorAt`. The check happens in
+`ContextualCheckShieldedInputs` (called from
+`AcceptToMemoryPool` and from `ConnectBlock`), and only after it
+passes does the bundle get queued into the batch validator.
+
+```cpp reference title="src/coins.h (HaveSaplingAnchor / GetSaplingAnchorAt declarations)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/coins.h#L120-L220
+```
+
+Mempool implications: a transaction that uses a freshly-mined
+anchor is fine, but the wallet conventionally uses an anchor a few
+blocks behind the tip to avoid the case where the mempool tx is
+included in a block that reorgs away the anchor's block. The
+default depth is controlled by the wallet's `-anchorconfirmations`
+operational setting; consensus permits any past anchor.
+
+#### Wallet witnesses
+
+The wallet keeps, for each unspent note, an authentication path
+from that note's commitment up to the *current* tree root. This is
+the **witness**. Witnesses are updated incrementally as new blocks
+arrive (the witness is extended on the right and the path is
+rehashed up). The Sapling and Orchard wallet witnesses live on the
+Rust side via the same `incrementalmerkletree` machinery:
+
+```rust reference title="src/rust/src/wallet.rs (witness tracking)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/rust/src/wallet.rs#L1-L80
+```
+
+A wallet that has lost or corrupted its witnesses cannot spend
+notes until it rescans the chain to rebuild them. This is one of
+the reasons a wallet backup that captures only seed material is not
+sufficient by itself.
 
 ### Sprout
 
@@ -392,6 +588,24 @@ that were not already in the mempool.
 - **Orchard action accepted with a zero ephemeral key.** Action would
   be invalid; circuit catches it. Caught by: upstream `orchard`
   crate tests.
+- **Forgetting to update the note commitment tree on `ConnectBlock`.**
+  Every Sapling output and every Orchard action contributes one new
+  leaf. A missed append silently desynchronises the in-memory
+  frontier from the on-disk LevelDB, and the next block fails the
+  header-commitment cross-check. Caught by: the block-header check
+  in `ConnectBlock` (`hashFinalSaplingRoot` / `hashBlockCommitments`).
+- **Accepting a spend against an anchor that was never on the active
+  chain.** The cryptographic proof is valid against any tree, but
+  consensus requires the anchor was a real past root. Caught by:
+  `CCoinsView::HaveSaplingAnchor` lookup in
+  `ContextualCheckShieldedInputs`; without it the verifier would
+  accept arbitrary roots.
+- **Wallet witness drift after a reorg.** If `BlockDisconnected`
+  fires but the wallet rolls back nullifiers without also rolling
+  back its witnesses, a subsequent spend will be built against a
+  root that no longer exists. Caught by: the on-chain anchor check
+  rejects the broadcast tx; user-visible "transaction stuck"
+  symptoms.
 
 ## 5. Spec pointers
 
@@ -426,6 +640,20 @@ that were not already in the mempool.
    size and the elapsed verification time at INFO level under
    `-debug=zk`. Use it to characterise the cost of a 1-spend vs
    16-spend bundle.
+
+5. **Anchor lookup walkthrough.** Pick a recent Sapling spend
+   transaction from testnet. Decode it with `zcash-inspect` and
+   extract the anchor (`anchor` field). Use `zcash-cli` to find the
+   block height at which that anchor was the Sapling tree root.
+   Hint: there is no direct RPC; the trick is to scan blocks and
+   call `getblock <hash> true` to compare `finalsaplingroot`. This
+   exercise drives home that the chain stores roots per block.
+
+6. **Anchor regression scenario.** On regtest, build a Sapling
+   transaction with `z_sendmany`, then force a reorg that excludes
+   the block the anchor was taken from. Confirm that re-broadcasting
+   the original transaction fails the `HaveSaplingAnchor` check.
+   This is exactly the failure mode mentioned in section 4.
 
 ## 7. Further reading
 
