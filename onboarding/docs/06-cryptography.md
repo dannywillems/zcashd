@@ -86,8 +86,8 @@ implementations (`sha256_avx2.cpp`, `sha256_sse4.cpp`,
 `CSHA256::AutoDetect` selects the best implementation based on
 CPUID.
 
-```cpp reference title="src/crypto/sha256.cpp (AutoDetect dispatch)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/crypto/sha256.cpp#L1-L60
+```cpp reference title="src/crypto/sha256.cpp (SHA256AutoDetect dispatch)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/crypto/sha256.cpp#L575-L640
 ```
 
 `CHash256` (in `src/hash.h`) is double-SHA256, used for txid
@@ -221,7 +221,7 @@ was made to enforce
 (no malleability, agreed canonical encoding).
 
 ```rust reference title="src/rust/src/ed25519.rs (Sprout binding signature wrapper)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/rust/src/ed25519.rs#L1-L80
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/rust/src/ed25519.rs#L1-L69
 ```
 
 ### RedJubjub (Sapling)

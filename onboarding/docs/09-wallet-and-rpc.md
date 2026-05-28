@@ -82,8 +82,8 @@ and the new `zcashd-wallet-tool` hint at it).
 
 #### Encryption
 
-```cpp reference title="src/wallet/crypter.h (CCrypter)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/crypter.h#L1-L80
+```cpp reference title="src/wallet/crypter.h (class CCrypter)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/crypter.h#L93-L180
 ```
 
 `CCrypter` performs AES-256-CBC encryption of secret keys using a
@@ -118,8 +118,8 @@ inputs, calls into the Rust builder
 `zcash_primitives::transaction::builder`), constructs proofs (via
 Rust prover handles in `src/rust/src/sapling.rs`), and signs.
 
-```cpp reference title="src/wallet/wallet_tx_builder.h (WalletTxBuilder interface)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/wallet_tx_builder.h#L1-L80
+```cpp reference title="src/wallet/wallet_tx_builder.h (class WalletTxBuilder)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/wallet_tx_builder.h#L374-L453
 ```
 
 Older code paths (the v4-and-earlier builder) exist but are

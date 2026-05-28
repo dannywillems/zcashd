@@ -183,8 +183,8 @@ witness.
 Sprout's tree is a plain C++ class, kept for historical
 compatibility:
 
-```cpp reference title="src/zcash/IncrementalMerkleTree.hpp (Sprout tree depths and types)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/zcash/IncrementalMerkleTree.hpp#L1-L80
+```cpp reference title="src/zcash/IncrementalMerkleTree.hpp (class IncrementalMerkleTree)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/zcash/IncrementalMerkleTree.hpp#L84-L260
 ```
 
 Sapling and Orchard trees live in Rust, in the upstream
@@ -215,8 +215,8 @@ zcashd treats anchors as first-class entries in the same
 `CCoinsView` abstraction that owns transparent UTXOs. The view has
 explicit accessors for each pool's anchor and current best root:
 
-```cpp reference title="src/coins.h (CCoinsView anchor accessors)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/coins.h#L1-L80
+```cpp reference title="src/coins.h (class CCoinsView)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/coins.h#L363-L490
 ```
 
 The on-disk backing is LevelDB via
@@ -287,8 +287,8 @@ height. zcashd does this via `CCoinsView::HaveSaplingAnchor` and
 `AcceptToMemoryPool` and from `ConnectBlock`), and only after it
 passes does the bundle get queued into the batch validator.
 
-```cpp reference title="src/coins.h (HaveSaplingAnchor / GetSaplingAnchorAt declarations)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/coins.h#L120-L220
+```cpp reference title="src/coins.h (anchor accessor declarations)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/coins.h#L363-L490
 ```
 
 Mempool implications: a transaction that uses a freshly-mined
@@ -390,10 +390,13 @@ Rust shims and integration:
 
 The Rust libraries doing the actual cryptography are in
 `zcash_primitives::sapling::*` (in the `librustzcash` workspace
-upstream).
+upstream), now factored out into a dedicated `sapling-crypto` crate.
+A contributor-maintained walkthrough with the math, the circuit
+gadgets, and pedagogical notes lives at
+[dannywillems.github.io/sapling-crypto](https://dannywillems.github.io/sapling-crypto).
 
-```rust reference title="src/rust/src/sapling.rs (BatchValidator entry)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/rust/src/sapling.rs#L1-L100
+```rust reference title="src/rust/src/sapling.rs (BatchValidator)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/rust/src/sapling.rs#L473-L569
 ```
 
 #### Sapling primitives
@@ -479,7 +482,10 @@ The cryptography lives in the `orchard` crate at
   destroying, or transferring.
 
 Read the [Orchard book](https://zcash.github.io/orchard/) and the
-"Orchard cryptography" section of the protocol spec.
+"Orchard cryptography" section of the protocol spec. A
+contributor-maintained extension of the Orchard book, with extra
+walkthroughs of the circuit and helper notes, lives at
+[dannywillems.github.io/orchard](https://dannywillems.github.io/orchard).
 
 ### Wallet scanning (trial decryption)
 
@@ -665,6 +671,10 @@ that were not already in the mempool.
   a Trusted Setup", 2019.
 - [Halo 2 book](https://zcash.github.io/halo2/) for the IPA argument
   and the recursion construction.
-- [Orchard book](https://zcash.github.io/orchard/).
+- [Orchard book](https://zcash.github.io/orchard/) and the
+  contributor-maintained extension at
+  [dannywillems.github.io/orchard](https://dannywillems.github.io/orchard).
+- [dannywillems.github.io/sapling-crypto](https://dannywillems.github.io/sapling-crypto)
+  for a walkthrough of the Sapling cryptography crate.
 - Groth, "On the Size of Pairing-Based Non-interactive Arguments",
   EUROCRYPT 2016 (Groth16).

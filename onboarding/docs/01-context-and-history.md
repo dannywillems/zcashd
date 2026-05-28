@@ -45,8 +45,8 @@ implementations: zcashd (this repo, C++/Rust) and zebrad
 The first line in `zcashd`'s daemon entry point is the easiest anchor
 for "is this code Bitcoin or Zcash":
 
-```cpp reference title="src/bitcoind.cpp (entry point)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/bitcoind.cpp#L1-L40
+```cpp reference title="src/bitcoind.cpp (main entry point)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/bitcoind.cpp#L216-L225
 ```
 
 The deprecation guard is one of the operational artefacts unique to
@@ -88,7 +88,7 @@ wallet (Zashi) and on protocol research. The Zcash Foundation continues
 zebrad.
 
 ZODL (Zcash Open Development Layer) was created to take over zcashd
-maintenance. The reader is presumed to be joining ZODL.
+maintenance.
 
 Check `doc/authors.md` and the recent git log. The standard
 "who is active right now" probe:
@@ -154,19 +154,29 @@ https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/consensus/upgrades.cpp#L1-L60
 
 Mainnet activation heights:
 
-| Upgrade | Branch ID | Height | What activates |
-|---------|-----------|--------|----------------|
-| Sprout | 0x00000000 | genesis | original Zerocash chain |
-| Overwinter | 0x5ba81b19 | 347500 | transaction expiry, v3 tx |
-| Sapling | 0x76b809bb | 419200 | Sapling spends and outputs, v4 tx |
-| Blossom | 0x2bb40e60 | 653600 | 75-second block target |
-| Heartwood | 0xf5b9230b | 903000 | shielded coinbase, ZIP-221 history MMR |
-| Canopy | 0xe9ff75a6 | 1046400 | funding streams replace founders reward |
-| NU5 | 0xc2d6d0b4 | 1687104 | Orchard, v5 tx, ZIP-244 |
+| Upgrade | Branch ID | Height | Date | What activates |
+|---------|-----------|--------|------|----------------|
+| Sprout | 0x00000000 | genesis | 2016-10-28 | original Zerocash chain |
+| Overwinter | 0x5ba81b19 | 347500 | 2018-06-25 | transaction expiry, v3 tx |
+| Sapling | 0x76b809bb | 419200 | 2018-10-28 | Sapling spends and outputs, v4 tx |
+| Blossom | 0x2bb40e60 | 653600 | 2019-12-11 | 75-second block target |
+| Heartwood | 0xf5b9230b | 903000 | 2020-07-16 | shielded coinbase, ZIP-221 history MMR |
+| Canopy | 0xe9ff75a6 | 1046400 | 2020-11-18 | funding streams replace founders reward |
+| NU5 | 0xc2d6d0b4 | 1687104 | 2022-05-31 | Orchard, v5 tx, ZIP-244 |
+| NU6 | 0xc8e71055 | 2726400 | 2024-11-23 | new development funding streams (ZIP-1015 / ZIP-214 update); see ZIP-253 |
+| NU6.1 | 0x4dec4df0 | 3146400 | 2025-11-24 | community / coinholder funding model (ZIP-1016), deferred dev-fund lockbox disbursement (ZIP-271); see ZIP-255 |
 
 `UPGRADE_ZFUTURE` is an integration-testing placeholder, not a real
-upgrade. There is no NU6 in this codebase at the time of writing
-(zcashd v5.5.0-rc1 was the last ECC release).
+upgrade. **NU6 and NU6.1 are NOT in this codebase**: the course is
+pinned to upstream tag `v5.5.0-rc1` (the last ECC release, predating
+NU6). On a current mainnet node the active branch ID is therefore
+either `0xc8e71055` (NU6) or `0x4dec4df0` (NU6.1) rather than NU5,
+and the table entries above for those rows are facts about the
+network, not about this code. The fork that contains them lives on
+the master / current branches of upstream
+[zcash/zcash](https://github.com/zcash/zcash); compare
+`src/consensus/upgrades.cpp` there against the v5.5.0-rc1 snapshot
+embedded in this course.
 
 ### Trusted setups
 

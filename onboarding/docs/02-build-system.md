@@ -283,12 +283,17 @@ file pinning to a specific version and a tarball SHA-256, then teach
 The build system is implementation-specific and not covered by the
 protocol spec. Relevant external docs:
 
-- [doc/build-debian.md](https://github.com/zcash/zcash/blob/v5.5.0-rc1/doc/build-debian.md)
-  (and the other `doc/build-*.md` files) for per-OS notes.
 - [doc/release-process.md](https://github.com/zcash/zcash/blob/v5.5.0-rc1/doc/release-process.md)
-  for the Gitian flow.
-- [doc/dependencies.md](https://github.com/zcash/zcash/blob/v5.5.0-rc1/doc/dependencies.md)
-  for the canonical dependency list.
+  for the Gitian flow and the canonical release checklist.
+- [doc/authors.md](https://github.com/zcash/zcash/blob/v5.5.0-rc1/doc/authors.md)
+  for the current contributor list.
+- [doc/developer-notes.md](https://github.com/zcash/zcash/blob/v5.5.0-rc1/doc/developer-notes.md)
+  for the inherited Bitcoin Core code style.
+- [INSTALL](https://github.com/zcash/zcash/blob/v5.5.0-rc1/INSTALL) at
+  the repo root, and the upstream
+  [zcash-readthedocs build guide](https://zcash.readthedocs.io/en/latest/rtd_pages/zcashd.html#building)
+  for per-OS install notes (the per-OS `doc/build-*.md` files that
+  Bitcoin Core ships do not exist in this tree).
 
 ## 6. Exercises
 

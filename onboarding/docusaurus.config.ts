@@ -54,10 +54,17 @@ const config: Config = {
 
   stylesheets: [
     {
-      href: "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css",
+      // Pin to the same katex version that rehype-katex pulls in (0.16.47
+      // at the time of writing). Mismatch causes CSS class drift and the
+      // MathML accessibility fallback bleeds through as duplicate text.
+      // To bump: check `node_modules/katex/package.json`, then regenerate
+      // the SRI with:
+      //   curl -s https://cdn.jsdelivr.net/npm/katex@<v>/dist/katex.min.css \
+      //     | openssl dgst -sha384 -binary | openssl base64 -A
+      href: "https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/katex.min.css",
       type: "text/css",
       integrity:
-        "sha384-nB0miv6/jRmo5EGIE6RDQE0etf4GvjBR1bkf4pcUk2TprLGa0k7/rJkRnCu6WSt6",
+        "sha384-nH0MfJ44wi1dd7w6jinlyBgljjS8EJAh2JBoRad8a3VDw2K69vfaaqm4WnR+gXtA",
       crossorigin: "anonymous",
     },
   ],

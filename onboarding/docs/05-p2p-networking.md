@@ -62,14 +62,14 @@ src/torcontrol.{h,cpp}        optional Tor v3 hidden service support
 
 `CNode` is the unit of connection state:
 
-```cpp reference title="src/net.h (CNode header excerpt)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/net.h#L260-L360
+```cpp reference title="src/net.h (class CNode)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/net.h#L262-L360
 ```
 
 ### Connection model
 
 ```cpp reference title="src/net.cpp (StartNode: thread creation)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/net.cpp#L2050-L2150
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/net.cpp#L1903-L2000
 ```
 
 A live node has up to 125 peers, split inbound vs outbound. Outbound
@@ -135,8 +135,8 @@ and `getdata` with full blocks.
 
 ### Handshake
 
-```cpp reference title="src/protocol.h (NetMsgType constants)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/protocol.h#L1-L100
+```cpp reference title="src/protocol.h (CMessageHeader and inventory types)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/protocol.h#L27-L210
 ```
 
 Read `ProcessMessage` (case `NetMsgType::VERSION`) and `SendMessages`

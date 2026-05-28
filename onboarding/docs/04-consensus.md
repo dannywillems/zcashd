@@ -87,8 +87,8 @@ Key fields:
   distribution; see ZIP-207, ZIP-214)
 - `nFundingPeriodLength`
 
-```cpp reference title="src/consensus/params.h (Consensus::Params, declarations)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/consensus/params.h#L100-L200
+```cpp reference title="src/consensus/params.h (struct Params)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/consensus/params.h#L228-L372
 ```
 
 The three classes in `src/chainparams.cpp` instantiate
@@ -105,6 +105,26 @@ For mainnet, the activation heights are listed in
 Testnet and regtest heights differ; regtest activations are
 typically overridable via `-nuparams=` for tests.
 
+The two upgrades beyond what this code knows about, included in the
+chapter-01 table for completeness:
+
+- **NU6** (mainnet height 2726400, branch ID `0xc8e71055`,
+  activated 2024-11-23): defined by
+  [ZIP-253](https://zips.z.cash/zip-0253). Replaces the Canopy
+  funding streams with new ones; updates ZIP-214.
+- **NU6.1** (mainnet height 3146400, branch ID `0x4dec4df0`,
+  activated 2025-11-25): defined by
+  [ZIP-255](https://zips.z.cash/zip-0255). Deploys the
+  community / coinholder funding model
+  ([ZIP-1016](https://zips.z.cash/zip-1016)) and the deferred
+  dev-fund lockbox disbursement ([ZIP-271](https://zips.z.cash/zip-0271)).
+
+Neither row exists in `NetworkUpgradeInfo[]` at tag `v5.5.0-rc1`. A
+ZODL build that follows the current mainnet must add them to
+`Consensus::Params::vUpgrades` and to `NetworkUpgradeInfo[]` in
+`src/consensus/upgrades.cpp`. Until then a v5.5.0-rc1 binary will
+diverge from the network at block 2726400.
+
 ### Network upgrade machinery
 
 Read [src/consensus/upgrades.cpp](https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/consensus/upgrades.cpp)
@@ -117,7 +137,7 @@ CurrentEpochBranchId(nHeight, params)     -> uint32_t
 ```
 
 ```cpp reference title="src/consensus/upgrades.cpp (CurrentEpochBranchId)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/consensus/upgrades.cpp#L40-L100
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/consensus/upgrades.cpp#L98-L120
 ```
 
 The branch ID is what gets put in `nConsensusBranchId` of every
@@ -209,7 +229,7 @@ as outputs. Zcash adds:
 ### `ConnectBlock` walkthrough
 
 ```cpp reference title="src/main.cpp (ConnectBlock entry)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/main.cpp#L3500-L3600
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/main.cpp#L3067-L3170
 ```
 
 Once a block has passed both `CheckBlock` and
@@ -251,7 +271,7 @@ Zcash uses a windowed difficulty algorithm (not Bitcoin's
 epoch-based retarget).
 
 ```cpp reference title="src/pow.cpp (GetNextWorkRequired)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/pow.cpp#L1-L70
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/pow.cpp#L20-L100
 ```
 
 It looks at the last `nPowAveragingWindow` blocks and adjusts
@@ -262,7 +282,7 @@ was 150 seconds.
 `CheckEquihashSolution` validates the Equihash PoW:
 
 ```cpp reference title="src/pow.cpp (CheckEquihashSolution)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/pow.cpp#L150-L210
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/pow.cpp#L107-L174
 ```
 
 Parameters: $(n, k) = (200, 9)$ for mainnet/testnet,

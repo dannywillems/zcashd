@@ -69,7 +69,7 @@ test/                  empty/placeholder; real tests live elsewhere
 `AppInit2` is worth quoting; it is the spine of node startup:
 
 ```cpp reference title="src/init.cpp (AppInit2 prologue)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/init.cpp#L900-L1000
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/init.cpp#L1048-L1110
 ```
 
 ### Chain, blocks, transactions

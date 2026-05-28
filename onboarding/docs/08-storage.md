@@ -101,8 +101,8 @@ as they were received. Each file caps at ~128 MiB; once full, a
 new `blkNNNNN.dat` is started. The block index records the
 `(file, offset)` of each block so that random access is one seek.
 
-```cpp reference title="src/validation.h via src/main.cpp (block file allocation)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/main.cpp#L4400-L4500
+```cpp reference title="src/main.cpp (FindBlockPos: block file allocation)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/main.cpp#L4756-L4860
 ```
 
 Companion `rev?????.dat` files hold **undo data**: the inputs
@@ -161,7 +161,7 @@ The chainstate is read through `CCoinsViewDB` (the LevelDB
 backing) layered under `CCoinsViewCache` (the in-memory cache):
 
 ```cpp reference title="src/coins.h (CCoinsView, CCoinsViewCache, CCoinsViewDB)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/coins.h#L1-L100
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/coins.h#L363-L600
 ```
 
 Note commitment tree roots (see
@@ -250,8 +250,8 @@ zcash-cli getrawtransaction <txid>     # by hash, any chain location
 
 Programmatic write path:
 
-```cpp reference title="src/txdb.cpp (CBlockTreeDB::WriteTxIndex)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/txdb.cpp#L80-L160
+```cpp reference title="src/txdb.cpp (CBlockTreeDB read/write methods)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/txdb.cpp#L321-L420
 ```
 
 #### Address index (`-addressindex`)
@@ -334,8 +334,8 @@ https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/walletdb.cpp#L1-L120
 The serialised wallet types live in
 [src/wallet/walletdb.h](https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/walletdb.h):
 
-```cpp reference title="src/wallet/walletdb.h (CWalletDB API)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/walletdb.h#L1-L120
+```cpp reference title="src/wallet/walletdb.h (class CWalletDB)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/walletdb.h#L400-L498
 ```
 
 #### BDB on-disk realities
@@ -402,8 +402,8 @@ Serialised `CAddrMan` state: the new/tried tables of known peer
 addresses. Written periodically and on shutdown by
 `CAddrDB::Write`:
 
-```cpp reference title="src/addrdb.h (CAddrDB)"
-https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/addrdb.h#L1-L80
+```cpp reference title="src/addrdb.h (class CAddrDB)"
+https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/addrdb.h#L81-L103
 ```
 
 Lose it and the node will rebootstrap from DNS seeds on next
