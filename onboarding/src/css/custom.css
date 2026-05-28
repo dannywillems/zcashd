@@ -1,0 +1,102 @@
+/* Course-wide custom styling.
+ *
+ * The announcement bar is amber and pinned to the top of the viewport so
+ * the AI-generated disclaimer is always visible. Docusaurus does not make
+ * the announcement bar sticky by default; we pin it here and push the
+ * navbar (which is `position: sticky; top: 0` via `navbar--fixed-top`)
+ * down by the bar's height so they stack rather than overlap.
+ *
+ * Docusaurus 3.x leaves --docusaurus-announcement-bar-height resolving
+ * to `auto` outside of mobile media queries, so we set it explicitly.
+ */
+
+:root {
+  --ifm-color-primary: #2e6cdf;
+  --ifm-color-primary-dark: #1f5cc9;
+  --ifm-color-primary-darker: #1d57bf;
+  --ifm-color-primary-darkest: #18489d;
+  --ifm-color-primary-light: #4a82e3;
+  --ifm-color-primary-lighter: #5a8de5;
+  --ifm-color-primary-lightest: #84a8ec;
+  --ifm-code-font-size: 90%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  /* Fix the bar height so layout calculations are deterministic.
+   * Tall enough for the one-line disclaimer at the default font size. */
+  --onboarding-announcement-bar-height: 36px;
+  --docusaurus-announcement-bar-height: 36px;
+}
+
+[data-theme="dark"] {
+  --ifm-color-primary: #6ea0f3;
+  --ifm-color-primary-dark: #4e8af0;
+  --ifm-color-primary-darker: #3f81ef;
+  --ifm-color-primary-darkest: #1864ea;
+  --ifm-color-primary-light: #8eb6f6;
+  --ifm-color-primary-lighter: #9ec0f7;
+  --ifm-color-primary-lightest: #c5d8fa;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Pin the announcement bar to the viewport. Use both the
+ * theme-announcement-bar utility class (stable across upgrades) and
+ * the hashed CSS-module class via a wildcard, with !important to
+ * win against the default `position: relative` Docusaurus ships. */
+.theme-announcement-bar,
+div[class*="announcementBar_"] {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0;
+  right: 0;
+  height: var(--onboarding-announcement-bar-height) !important;
+  z-index: calc(var(--ifm-z-index-fixed) + 10) !important;
+}
+
+/* The navbar uses `position: sticky; top: 0`. Push it down so it
+ * stacks BELOW the fixed announcement bar instead of overlapping it. */
+.navbar.navbar--fixed-top,
+.navbar {
+  top: var(--onboarding-announcement-bar-height) !important;
+}
+
+/* Make sure the main content starts BELOW the announcement bar. The
+ * `<header>` containing the navbar sticks; the page content begins
+ * after it. We add a top spacer equal to the bar height so the first
+ * paragraph is not hidden underneath. */
+#__docusaurus {
+  padding-top: var(--onboarding-announcement-bar-height);
+}
+
+/* Anchor jumps must not land underneath the pinned bar. */
+html {
+  scroll-padding-top: calc(
+    var(--ifm-navbar-height) +
+      var(--onboarding-announcement-bar-height)
+  );
+}
+
+main {
+  scroll-margin-top: calc(
+    var(--ifm-navbar-height) +
+      var(--onboarding-announcement-bar-height)
+  );
+}
+
+/* KaTeX display blocks: a touch of vertical breathing room. */
+.katex-display {
+  margin: 1em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Tighter tables in dense reference chapters. */
+.markdown table {
+  display: table;
+  width: 100%;
+}
+
+.markdown table th,
+.markdown table td {
+  padding: 6px 10px;
+  font-size: 0.92em;
+}

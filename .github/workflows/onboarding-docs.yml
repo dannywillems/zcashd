@@ -1,0 +1,117 @@
+# Auto-deploy the onboarding Docusaurus site.
+#
+# Source-and-deploy-on-the-same-branch pattern: the Markdown chapters live
+# under `onboarding/` on the `onboarding` branch; this workflow builds
+# Docusaurus there and commits the generated static site back to the
+# ROOT of the same branch. GitHub Pages should be configured to serve
+# from "branch: onboarding" "folder: / (root)".
+#
+# To prevent a publish loop, the deploy commit is suffixed with
+# "[skip ci]" AND `paths-ignore` filters out every artefact Docusaurus
+# emits at the root (so any future push that only touches build outputs
+# is a no-op).
+#
+# Pages configuration the maintainer must set in repo Settings -> Pages
+# after the first run:
+#   - Build and deployment: Deploy from a branch
+#   - Branch: onboarding / (root)
+#
+# Pinning:
+#   - All third-party actions are pinned to commit SHAs. The trailing
+#     comment is the human-readable version tag for bumps.
+#   - `runs-on: ubuntu-latest` resolves to GitHub's newest supported
+#     Ubuntu image on every run.
+
+name: Onboarding docs deploy
+
+on:
+  push:
+    branches: [onboarding]
+    paths-ignore:
+      - "index.html"
+      - "404.html"
+      - "assets/**"
+      - "sitemap.xml"
+      - "opensearch.xml"
+      - "manifest.json"
+      - "search-index-*.json"
+      - "katex/**"
+      - "img/**"
+      - "styles.*.css"
+      - "runtime~main.*.js"
+      - "main.*.js"
+      - ".nojekyll"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-onboarding-docs
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        with:
+          fetch-depth: 0
+          ref: onboarding
+
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
+        with:
+          node-version: "24"
+          cache: "npm"
+          cache-dependency-path: onboarding/package-lock.json
+
+      - name: Install dependencies
+        working-directory: onboarding
+        run: npm install
+
+      - name: Audit (production deps)
+        working-directory: onboarding
+        run: npm audit --omit=dev --audit-level=moderate || true
+
+      - name: Build site
+        working-directory: onboarding
+        run: npx docusaurus build
+
+      - name: Stage build artefacts to /tmp
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/docusaurus-build
+          cp -r onboarding/build /tmp/docusaurus-build
+          ls /tmp/docusaurus-build | head -50
+
+      - name: Wipe previous root deploy artefacts
+        run: |
+          set -euo pipefail
+          # Only the files Docusaurus emits at root; never touch source
+          # directories like onboarding/, src/, depends/, etc.
+          rm -f index.html 404.html sitemap.xml manifest.json opensearch.xml
+          rm -f styles.*.css runtime~main.*.js main.*.js search-index-*.json
+          rm -rf assets img katex .docusaurus
+
+      - name: Overlay new build at the root
+        run: |
+          set -euo pipefail
+          # rsync so that hidden files like .nojekyll come across.
+          rsync -a --exclude='.git/' /tmp/docusaurus-build/ ./
+
+      - name: Commit and push deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes; nothing to deploy."
+            exit 0
+          fi
+          git commit -m "docs: deploy onboarding site [skip ci]"
+          git push origin HEAD:onboarding

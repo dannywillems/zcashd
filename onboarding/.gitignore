@@ -1,0 +1,18 @@
+# Docusaurus
+.docusaurus/
+.cache-loader/
+node_modules/
+
+# Build outputs are committed to the same branch (see workflow). The
+# emitted root-level artefacts are listed here so that `npm install`
+# preserves them but local builds in ./build are ignored.
+build/
+
+# Local env files
+.env*
+.env.local
+
+# Editor
+*.swp
+*.swo
+.DS_Store
