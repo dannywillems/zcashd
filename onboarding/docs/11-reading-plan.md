@@ -1,5 +1,5 @@
 ---
-sidebar_position: 10
+sidebar_position: 11
 title: "Reading plan: six weeks"
 description: "A six-week, full-time, hands-on reading plan that converges on a real merged pull request."
 ---
@@ -191,8 +191,8 @@ byte-by-byte.
 
 **Reading:**
 
-- [Chapter 08](./08-wallet-and-rpc.md).
-- [Chapter 09](./09-testing.md).
+- [Chapter 09](./09-wallet-and-rpc.md).
+- [Chapter 10](./10-testing.md).
 - [src/wallet/wallet.{h,cpp}](https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/wallet.h)
   (skim; large).
 - [src/wallet/wallet_tx_builder.{h,cpp}](https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/wallet_tx_builder.h)

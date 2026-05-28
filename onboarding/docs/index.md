@@ -15,7 +15,7 @@ subsystem".
 The course is structured as a self-paced reading guide. Each chapter
 teaches one subsystem and points to the exact files, functions, ZIPs,
 and external documents to read. It is paired with a six-week
-hands-on reading plan (chapter 10) that converges on a real merged
+hands-on reading plan (chapter 11) that converges on a real merged
 PR.
 
 :::warning Auto-generated content
@@ -62,11 +62,12 @@ prose need to be revisited.
 | 05 | [P2P networking](./05-p2p-networking.md) | Wire protocol, peer lifecycle, mempool relay | 3 hours |
 | 06 | [Cryptography](./06-cryptography.md) | Hashes, Equihash, signatures, BLAKE2 personalization | 4 hours |
 | 07 | [zk-SNARKs and shielded pools](./07-zk-proofs-and-pools.md) | Sprout, Sapling, Orchard, batch verification | 6 hours |
-| 08 | [Wallet and RPC](./08-wallet-and-rpc.md) | CWallet, ZIP-32, ZIP-316, RPC dispatch | 3 hours |
-| 09 | [Testing](./09-testing.md) | gtest, Boost.Test, RPC framework, fuzzing | 2 hours |
-| 10 | [Reading plan](./10-reading-plan.md) | Six-week structured study plan with exercises | reference |
-| 11 | [Glossary](./11-glossary.md) | Domain abbreviations, with code anchors | reference |
-| 12 | [External references](./12-external-references.md) | ZIPs, papers, spec, related repos | reference |
+| 08 | [Storage](./08-storage.md) | Block files, chainstate, indexes, mempool, wallet, addrman | 2 hours |
+| 09 | [Wallet and RPC](./09-wallet-and-rpc.md) | CWallet, ZIP-32, ZIP-316, RPC dispatch | 3 hours |
+| 10 | [Testing](./10-testing.md) | gtest, Boost.Test, RPC framework, fuzzing | 2 hours |
+| 11 | [Reading plan](./11-reading-plan.md) | Six-week structured study plan with exercises | reference |
+| 12 | [Glossary](./12-glossary.md) | Domain abbreviations, with code anchors | reference |
+| 13 | [External references](./13-external-references.md) | ZIPs, papers, spec, related repos | reference |
 
 Total active reading: roughly 30 hours. Plan to spend another 60-80
 hours running the node, instrumenting it, and writing patches against
@@ -173,7 +174,7 @@ Used throughout. Reuse these symbols rather than introducing new ones.
    lean on Bitcoin Core background; if Bitcoin is new, read
    "Mastering Bitcoin" chapters 5 - 9 in parallel.
 3. Read 06 - 08 in any order. These are the Zcash-specific parts.
-4. Use chapter 10 as the week-by-week to-do list.
+4. Use chapter 11 as the week-by-week to-do list.
 5. Use chapters 11 - 12 as reference indices.
 
 ## Where to file corrections

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 title: "Wallet and RPC"
 description: "CWallet, BerkeleyDB storage, async RPC operations, ZIP-32 / ZIP-316, the WalletTxBuilder, and the JSON-RPC surface."
 ---

@@ -324,7 +324,7 @@ Microbenchmarks (`bench_bitcoin`).
 
 #### `src/gtest/` and `src/test/`
 
-Two parallel C++ unit-test suites; see [chapter 09](./09-testing.md).
+Two parallel C++ unit-test suites; see [chapter 10](./10-testing.md).
 
 ## Hot files
 

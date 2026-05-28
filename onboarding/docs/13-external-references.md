@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 title: "External references"
 description: "ZIPs, the Zcash Protocol Specification, papers, related repositories, and where to file security disclosures."
 ---

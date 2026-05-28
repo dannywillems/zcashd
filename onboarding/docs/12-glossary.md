@@ -1,5 +1,5 @@
 ---
-sidebar_position: 11
+sidebar_position: 12
 title: "Glossary"
 description: "Domain-specific abbreviations zcashd uses, each anchored to the file where the term is defined or first used."
 ---
