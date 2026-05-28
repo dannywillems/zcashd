@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-storage" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.10.1">
+<title data-rh="true">Storage | zcashd onboarding</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://dannywillems.github.io/zcashd/storage"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Storage | zcashd onboarding"><meta data-rh="true" name="description" content="What zcashd actually saves to disk, where, and how to inspect it. Split between protocol storage (blocks, chainstate, params), optional indexing storage, and wallet storage."><meta data-rh="true" property="og:description" content="What zcashd actually saves to disk, where, and how to inspect it. Split between protocol storage (blocks, chainstate, params), optional indexing storage, and wallet storage."><link data-rh="true" rel="icon" href="/zcashd/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://dannywillems.github.io/zcashd/storage"><link data-rh="true" rel="alternate" href="https://dannywillems.github.io/zcashd/storage" hreflang="en"><link data-rh="true" rel="alternate" href="https://dannywillems.github.io/zcashd/storage" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Storage","item":"https://dannywillems.github.io/zcashd/storage"}]}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5EGIE6RDQE0etf4GvjBR1bkf4pcUk2TprLGa0k7/rJkRnCu6WSt6" crossorigin="anonymous"><link rel="stylesheet" href="/zcashd/assets/css/styles.bddee692.css">
+<script src="/zcashd/assets/js/runtime~main.36c91a94.js" defer="defer"></script>
+<script src="/zcashd/assets/js/main.045bacb7.js" defer="defer"></script>
+</head>
+<body>
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{const n=new URLSearchParams(window.location.search).entries();for(var[t,e]of n)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}(),document.documentElement.setAttribute("data-announcement-bar-initially-dismissed",function(){try{return"true"===localStorage.getItem("docusaurus.announcement.dismiss")}catch(t){}return!1}())</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><div class="theme-announcement-bar announcementBar_mb4j" style="background-color:#fef3c7;color:#78350f" role="banner"><div class="content_knG7 announcementBarContent_xLdY">This site is automatically generated using Claude Code. Errors may have been introduced. The code is the law, always refer to the source in the <a href="https://github.com/zcash/librustzcash">librustzcash workspace</a>.</div></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/zcashd/"><b class="navbar__title text--truncate">zcashd onboarding</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/zcashd/">Course</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><a href="https://github.com/dannywillems/zcashd/tree/onboarding/onboarding" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Source<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><a href="https://github.com/zcash/zcash" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">zcash/zcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"><div class="navbar__search searchBarContainer_NW3z" dir="ltr"><input placeholder="Search" aria-label="Search" class="navbar__search-input searchInput_YFbd" value=""><div class="loadingRing_RJI3 searchBarLoadingRing_YnHq"><div></div><div></div><div></div><div></div></div></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG menuWithAnnouncementBar_GW3s"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/"><span title="Home" class="linkLabel_WmDU">Home</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/context-and-history"><span title="Context and history" class="linkLabel_WmDU">Context and history</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/build-system"><span title="Build system and contribution loop" class="linkLabel_WmDU">Build system and contribution loop</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/code-organization"><span title="Code organization" class="linkLabel_WmDU">Code organization</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/consensus"><span title="Consensus" class="linkLabel_WmDU">Consensus</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/p2p-networking"><span title="P2P networking" class="linkLabel_WmDU">P2P networking</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/cryptography"><span title="Cryptography (non-ZK)" class="linkLabel_WmDU">Cryptography (non-ZK)</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/zk-proofs-and-pools"><span title="zk-SNARKs and shielded pools" class="linkLabel_WmDU">zk-SNARKs and shielded pools</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" href="/zcashd/storage"><span title="Storage" class="linkLabel_WmDU">Storage</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/wallet-and-rpc"><span title="Wallet and RPC" class="linkLabel_WmDU">Wallet and RPC</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/testing"><span title="Testing" class="linkLabel_WmDU">Testing</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/reading-plan"><span title="Reading plan: six weeks" class="linkLabel_WmDU">Reading plan: six weeks</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/glossary"><span title="Glossary" class="linkLabel_WmDU">Glossary</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/external-references"><span title="External references" class="linkLabel_WmDU">External references</span></a></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/zcashd/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">Storage</span></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Storage</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-why-this-chapter-exists">1. Why this chapter exists<a href="#1-why-this-chapter-exists" class="hash-link" aria-label="Direct link to 1. Why this chapter exists" title="Direct link to 1. Why this chapter exists" translate="no">​</a></h2>
+<p>A running zcashd writes several kinds of state to disk, and a
+reader who confuses one for another will mis-diagnose every
+operational problem. The chainstate has different durability
+properties from the wallet, the wallet has different durability
+properties from the optional indexes, and <code>mempool.dat</code> is not
+the same thing as the mempool in memory. This chapter draws the
+map and shows the commands to inspect each store.</p>
+<p>The split below mirrors the access pattern: <strong>protocol storage</strong>
+(must agree byte-for-byte with every other validating node),
+<strong>indexing storage</strong> (optional, local, off by default,
+re-buildable), <strong>wallet storage</strong> (single-user secrets), and
+<strong>operational storage</strong> (peers, banlist, debug log).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-definitions">2. Definitions<a href="#2-definitions" class="hash-link" aria-label="Direct link to 2. Definitions" title="Direct link to 2. Definitions" translate="no">​</a></h2>
+<p><strong>Definition 8.1 (Datadir).</strong> The single directory that holds all
+node state, default <code>~/.zcash</code> on Linux. Overridable with
+<code>-datadir=&lt;path&gt;</code> on the command line. Network-specific state
+lives under <code>testnet3/</code> or <code>regtest/</code> subdirectories.</p>
+<p><strong>Definition 8.2 (Chainstate).</strong> The LevelDB database
+<code>&lt;datadir&gt;/chainstate/</code> containing the UTXO set, per-pool
+nullifier sets, per-pool anchor sets, the per-block note
+commitment tree roots, and the best-block pointer. It is the
+authoritative consensus state of a synced node.</p>
+<p><strong>Definition 8.3 (Block index).</strong> The LevelDB database
+<code>&lt;datadir&gt;/blocks/index/</code> mapping each block hash to a
+<code>CBlockIndex</code> record (height, file offset, status flags,
+cumulative work). Lets the node find a block on disk by hash
+without scanning every <code>blk?????.dat</code> file.</p>
+<p><strong>Definition 8.4 (Index databases).</strong> Optional secondary LevelDB
+databases (<code>&lt;datadir&gt;/blocks/index/</code> already exists by default;
+others are off by default and enabled per-flag) that map external
+queries (txid -&gt; location, address -&gt; transaction list,
+timestamp -&gt; block) to chain data. Indexes are local; they are
+not consensus; they can be rebuilt from chain data with
+<code>-reindex</code>.</p>
+<p><strong>Definition 8.5 (Wallet file).</strong> <code>&lt;datadir&gt;/wallet.dat</code>. A
+BerkeleyDB 6.2 database holding the user&#x27;s keys, addresses,
+transaction history, witnesses, and HD seed. Per-user secret.
+Never shared across nodes.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-the-code-and-the-on-disk-layout">3. The code and the on-disk layout<a href="#3-the-code-and-the-on-disk-layout" class="hash-link" aria-label="Direct link to 3. The code and the on-disk layout" title="Direct link to 3. The code and the on-disk layout" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="datadir-layout-mainnet">Datadir layout (mainnet)<a href="#datadir-layout-mainnet" class="hash-link" aria-label="Direct link to Datadir layout (mainnet)" title="Direct link to Datadir layout (mainnet)" translate="no">​</a></h3>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">~/.zcash/</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  blocks/</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    blk00000.dat            # raw serialised blocks, append-only</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    blk00001.dat</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    ...</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    rev00000.dat            # undo data for block disconnects</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    rev00001.dat</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    ...</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    index/                  # LevelDB; block hash -&gt; CBlockIndex</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  chainstate/               # LevelDB; UTXO + nullifiers + anchors</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  database/                 # BDB log files for the wallet</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  wallet.dat                # BDB; the legacy wallet</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  banlist.dat               # serialised CBanEntry list</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  peers.dat                 # serialised addrman state</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  mempool.dat               # mempool snapshot (loaded on startup)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  fee_estimates.dat         # serialised fee estimator state</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  zcash.conf                # operator&#x27;s config file (READ at startup)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  zcashd.pid                # PID of the running daemon</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  debug.log                 # main log</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  .cookie                   # RPC auth cookie (random per run, mode 0600)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  .lock                     # filesystem lock so two daemons cannot share</span><br></div></code></pre></div></div>
+<p>Testnet adds a <code>testnet3/</code> prefix; regtest uses <code>regtest/</code>. The
+shared params at <code>~/.zcash-params/</code> (Sprout-Groth16, Sapling
+proving and verifying keys) are SEPARATE from the datadir and
+shared across all networks; they are downloaded once by
+<code>zcutil/fetch-params.sh</code>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="protocol-storage">Protocol storage<a href="#protocol-storage" class="hash-link" aria-label="Direct link to Protocol storage" title="Direct link to Protocol storage" translate="no">​</a></h3>
+<p>This is the storage the protocol requires every node to keep
+consistent. Lose it or corrupt it and the node cannot validate
+new blocks.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="raw-block-files-blocksblkdat">Raw block files: <code>blocks/blk?????.dat</code><a href="#raw-block-files-blocksblkdat" class="hash-link" aria-label="Direct link to raw-block-files-blocksblkdat" title="Direct link to raw-block-files-blocksblkdat" translate="no">​</a></h4>
+<p>Append-only flat files holding serialised blocks in chain order
+as they were received. Each file caps at ~128 MiB; once full, a
+new <code>blkNNNNN.dat</code> is started. The block index records the
+<code>(file, offset)</code> of each block so that random access is one seek.</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/validation.h via src/main.cpp (block file allocation)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/main.cpp#L4400-L4500" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<p>Companion <code>rev?????.dat</code> files hold <strong>undo data</strong>: the inputs
+that each block consumed, plus per-pool tree state needed to
+rewind on <code>DisconnectBlock</code>. They are essential for reorgs.</p>
+<p>Inspect:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token function" style="color:#d73a49">ls</span><span class="token plain"> </span><span class="token parameter variable" style="color:#36acaa">-lh</span><span class="token plain"> ~/.zcash/blocks/blk*.dat</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Raw bytes; not directly useful. Use RPC:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">zcash-cli getblock </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">hash</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">0</span><span class="token plain">           </span><span class="token comment" style="color:#999988;font-style:italic"># raw hex</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">zcash-cli getblock </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">hash</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">1</span><span class="token plain">           </span><span class="token comment" style="color:#999988;font-style:italic"># parsed JSON</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">zcash-cli getblockcount</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">zcash-cli getbestblockhash</span><br></div></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="block-index-blocksindex">Block index: <code>blocks/index/</code><a href="#block-index-blocksindex" class="hash-link" aria-label="Direct link to block-index-blocksindex" title="Direct link to block-index-blocksindex" translate="no">​</a></h4>
+<p>LevelDB. Keys begin with <code>b</code> followed by the block hash; values
+are serialised <code>CBlockIndex</code> records. Read via
+<code>CBlockTreeDB::ReadBlockIndex</code>.</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/txdb.h (CBlockTreeDB, ReadBlockIndex)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/txdb.h#L1-L120" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<p>The block index also stores: file information (<code>f</code> prefix), the
+&quot;reindex needed&quot; flag (<code>R</code>), the last block file number (<code>l</code>),
+and the optional indexes&#x27; enable flags.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="chainstate-chainstate">Chainstate: <code>chainstate/</code><a href="#chainstate-chainstate" class="hash-link" aria-label="Direct link to chainstate-chainstate" title="Direct link to chainstate-chainstate" translate="no">​</a></h4>
+<p>LevelDB. The consensus-critical state. Keys, with byte prefixes:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">&#x27;C&#x27; + COutPoint  -&gt; Coin                  (the transparent UTXO entry)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&#x27;B&#x27; -&gt; uint256                            (best block hash)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"># Per-pool sets (Sprout, Sapling, Orchard):</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&#x27;s&#x27; + nullifier  -&gt; 1                     (Sprout nullifier set)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&#x27;S&#x27; + anchor     -&gt; SaplingMerkleTree     (Sapling anchor -&gt; stored tree state)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&#x27;O&#x27; + nullifier  -&gt; 1                     (Sapling nullifier set; varies by version)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">... etc</span><br></div></code></pre></div></div>
+<p>Exact prefix bytes are defined in
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/txdb.cpp" target="_blank" rel="noopener noreferrer" class="">src/txdb.cpp</a>;
+look for the <code>DB_*</code> constants:</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/txdb.cpp (DB_* prefix constants)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/txdb.cpp#L1-L80" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<p>The chainstate is read through <code>CCoinsViewDB</code> (the LevelDB
+backing) layered under <code>CCoinsViewCache</code> (the in-memory cache):</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/coins.h (CCoinsView, CCoinsViewCache, CCoinsViewDB)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/coins.h#L1-L100" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<p>Note commitment tree roots (see
+<a class="" href="/zcashd/zk-proofs-and-pools#anchors-and-note-commitment-trees">chapter 07</a>)
+are stored alongside the UTXO entries: the chainstate is the
+single store responsible for the entire post-block consensus
+state.</p>
+<p>Inspect:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># High-level summary; iterates the entire UTXO set so SLOW on mainnet</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">zcash-cli gettxoutsetinfo</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Pool balances (Sprout / Sapling / Orchard)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">zcash-cli getblockchaininfo </span><span class="token operator" style="color:#393A34">|</span><span class="token plain"> jq </span><span class="token string" style="color:#e3116c">&#x27;.valuePools&#x27;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Per-block roots</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">zcash-cli getblock </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">hash</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">1</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">|</span><span class="token plain"> jq </span><span class="token string" style="color:#e3116c">&#x27;.finalsaplingroot, .finalorchardroot&#x27;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Raw LevelDB inspection (read-only; do not run against a running node)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">zcashd </span><span class="token parameter variable" style="color:#36acaa">-datadir</span><span class="token operator" style="color:#393A34">=</span><span class="token plain">/path/to/snapshot -reindex-chainstate</span><br></div></code></pre></div></div>
+<p>Direct LevelDB scans require the daemon to be stopped (the
+exclusive lock is held while running). The Python <code>plyvel</code>
+library plus the
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/txdb.cpp" target="_blank" rel="noopener noreferrer" class="">src/txdb.cpp</a>
+prefix table lets you build a scanner; ZODL has not (yet)
+published a vetted tool.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="sapling-and-orchard-parameters-zcash-params">Sapling and Orchard parameters: <code>~/.zcash-params/</code><a href="#sapling-and-orchard-parameters-zcash-params" class="hash-link" aria-label="Direct link to sapling-and-orchard-parameters-zcash-params" title="Direct link to sapling-and-orchard-parameters-zcash-params" translate="no">​</a></h4>
+<p>NOT in the datadir. Downloaded once by
+<code>zcutil/fetch-params.sh</code>:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">~/.zcash-params/</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  sprout-groth16.params         (884 MB)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  sapling-spend.params          (47 MB)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  sapling-output.params         (3.4 MB)</span><br></div></code></pre></div></div>
+<p>Loaded at daemon startup by <code>librustzcash_init_zksnark_params</code>.
+A node that lacks them refuses to start.</p>
+<p>Inspect:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">sha256sum ~/.zcash-params/*</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Expected hashes are published; see zcutil/fetch-params.sh for the</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># canonical list.</span><br></div></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="note-commitment-tree-state">Note-commitment-tree state<a href="#note-commitment-tree-state" class="hash-link" aria-label="Direct link to Note-commitment-tree state" title="Direct link to Note-commitment-tree state" translate="no">​</a></h4>
+<p>The Sapling and Orchard frontiers (the rightmost-path
+representations described in
+<a class="" href="/zcashd/zk-proofs-and-pools#the-trees-themselves">chapter 07</a>)
+are stored INSIDE the chainstate under their own key prefixes.
+They are not a separate file; they piggyback on <code>chainstate/</code>
+because they evolve in lockstep with each block.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="indexing-storage">Indexing storage<a href="#indexing-storage" class="hash-link" aria-label="Direct link to Indexing storage" title="Direct link to Indexing storage" translate="no">​</a></h3>
+<p>Optional, off by default, never consensus. Indexes accelerate
+queries that map external identifiers to chain data. None of
+these are required for validation; rebuild with <code>-reindex</code> or
+<code>-reindex-chainstate</code> if lost.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="transaction-index--txindex">Transaction index (<code>-txindex</code>)<a href="#transaction-index--txindex" class="hash-link" aria-label="Direct link to transaction-index--txindex" title="Direct link to transaction-index--txindex" translate="no">​</a></h4>
+<p>When on, maintains a LevelDB index under <code>blocks/index/</code> mapping
+<code>txid -&gt; (block file, offset, length)</code>. Without <code>-txindex</code>, the
+node can only retrieve transactions that are in the mempool or
+in the wallet.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># Enable in zcash.conf</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token assign-left variable" style="color:#36acaa">txindex</span><span class="token operator" style="color:#393A34">=</span><span class="token number" style="color:#36acaa">1</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Then restart and let it rebuild (slow first time)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Required for:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">zcash-cli getrawtransaction </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">txid</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token plain">     </span><span class="token comment" style="color:#999988;font-style:italic"># by hash, any chain location</span><br></div></code></pre></div></div>
+<p>Programmatic write path:</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/txdb.cpp (CBlockTreeDB::WriteTxIndex)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/txdb.cpp#L80-L160" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="address-index--addressindex">Address index (<code>-addressindex</code>)<a href="#address-index--addressindex" class="hash-link" aria-label="Direct link to address-index--addressindex" title="Direct link to address-index--addressindex" translate="no">​</a></h4>
+<p>Maps transparent script hash -&gt; list of <code>(height, txid, vout, value)</code>. Required for the explorer-style RPCs
+<code>getaddresstxids</code>, <code>getaddressbalance</code>, <code>getaddressutxos</code>,
+<code>getaddressdeltas</code>. Off by default; large on mainnet (tens of
+GiB).</p>
+<p>The on-disk types are declared at
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/addressindex.h" target="_blank" rel="noopener noreferrer" class="">src/addressindex.h</a>:</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/addressindex.h (CAddressIndexKey, CAddressIndexIteratorKey)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/addressindex.h#L1-L100" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="spent-index--spentindex">Spent index (<code>-spentindex</code>)<a href="#spent-index--spentindex" class="hash-link" aria-label="Direct link to spent-index--spentindex" title="Direct link to spent-index--spentindex" translate="no">​</a></h4>
+<p>Maps an outpoint to the transaction that spent it. Required for
+<code>getspentinfo</code>. Same backing store as <code>addressindex</code>. Useful for
+forensic tools that need to walk &quot;where did this coin go&quot;.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="timestamp-index--timestampindex">Timestamp index (<code>-timestampindex</code>)<a href="#timestamp-index--timestampindex" class="hash-link" aria-label="Direct link to timestamp-index--timestampindex" title="Direct link to timestamp-index--timestampindex" translate="no">​</a></h4>
+<p>Maps timestamps to block hashes for fast &quot;block at time T&quot;
+lookups. Used by some block explorers.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="insight-style-indexes">Insight-style indexes<a href="#insight-style-indexes" class="hash-link" aria-label="Direct link to Insight-style indexes" title="Direct link to Insight-style indexes" translate="no">​</a></h4>
+<p>Several of the above were imported from Bitcoin&#x27;s Bitcore /
+Insight forks. Their on-disk format is documented in
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/addressindex.h" target="_blank" rel="noopener noreferrer" class="">src/addressindex.h</a>,
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/spentindex.h" target="_blank" rel="noopener noreferrer" class="">src/spentindex.h</a>,
+and
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/timestampindex.h" target="_blank" rel="noopener noreferrer" class="">src/timestampindex.h</a>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="reindex-flow">Reindex flow<a href="#reindex-flow" class="hash-link" aria-label="Direct link to Reindex flow" title="Direct link to Reindex flow" translate="no">​</a></h4>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">zcashd </span><span class="token parameter variable" style="color:#36acaa">-reindex</span><span class="token plain">                   </span><span class="token comment" style="color:#999988;font-style:italic"># rebuild block index AND chainstate</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">zcashd -reindex-chainstate        </span><span class="token comment" style="color:#999988;font-style:italic"># rebuild only chainstate (faster)</span><br></div></code></pre></div></div>
+<p><code>-reindex</code> reads every <code>blk?????.dat</code> from scratch; on mainnet
+expect several hours.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="wallet-storage">Wallet storage<a href="#wallet-storage" class="hash-link" aria-label="Direct link to Wallet storage" title="Direct link to Wallet storage" translate="no">​</a></h3>
+<p>The wallet is a separate persistence layer, owned by the user,
+on the same machine but conceptually independent.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="walletdat-berkeleydb-62"><code>wallet.dat</code> (BerkeleyDB 6.2)<a href="#walletdat-berkeleydb-62" class="hash-link" aria-label="Direct link to walletdat-berkeleydb-62" title="Direct link to walletdat-berkeleydb-62" translate="no">​</a></h4>
+<p>A typed key-value store. Each record is a tagged tuple:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">&quot;hdseed&quot;    -&gt; the master HD seed (encrypted if wallet is encrypted)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&quot;key&quot;       -&gt; a transparent (private, public) keypair</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&quot;sapext&quot;    -&gt; a Sapling extended spending key</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&quot;orchard_*&quot; -&gt; Orchard keys (varies)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&quot;tx&quot;        -&gt; a CWalletTx record</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&quot;name&quot;      -&gt; a label for an address</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&quot;acentry&quot;   -&gt; an account entry (legacy)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&quot;flags&quot;     -&gt; wallet feature flags (encrypted, HD, etc.)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&quot;version&quot;   -&gt; on-disk wallet version</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&quot;mkey&quot;      -&gt; a wrapped key (when wallet is passphrase-encrypted)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&quot;ckey&quot;      -&gt; a crypted private key</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">&quot;witnesscache_v3&quot; -&gt; serialised Sapling/Orchard witness cache</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">... and many more</span><br></div></code></pre></div></div>
+<p>The full key tag list is in
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/walletdb.cpp" target="_blank" rel="noopener noreferrer" class="">src/wallet/walletdb.cpp</a>:</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/wallet/walletdb.cpp (CWalletDB record tags)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/walletdb.cpp#L1-L120" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<p>The serialised wallet types live in
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/walletdb.h" target="_blank" rel="noopener noreferrer" class="">src/wallet/walletdb.h</a>:</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/wallet/walletdb.h (CWalletDB API)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/walletdb.h#L1-L120" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="bdb-on-disk-realities">BDB on-disk realities<a href="#bdb-on-disk-realities" class="hash-link" aria-label="Direct link to BDB on-disk realities" title="Direct link to BDB on-disk realities" translate="no">​</a></h4>
+<p>BerkeleyDB 6.2 maintains a <code>&lt;datadir&gt;/database/</code> directory of log
+files alongside <code>wallet.dat</code>. These logs must be preserved
+together; copying only <code>wallet.dat</code> while the daemon is running
+gives a partial state. Always stop the daemon, or use the
+&quot;backup wallet&quot; RPC:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">zcash-cli backupwallet /tmp/backup-wallet.dat</span><br></div></code></pre></div></div>
+<p><code>backupwallet</code> performs a transactional checkpoint and writes a
+self-contained copy.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="encryption">Encryption<a href="#encryption" class="hash-link" aria-label="Direct link to Encryption" title="Direct link to Encryption" translate="no">​</a></h4>
+<p>A passphrase-encrypted wallet protects the <em>secret</em> records
+(spending keys, HD seed). Public material (addresses, viewing
+keys, transaction metadata) is plaintext on disk. This is by
+design: the node must be able to scan for incoming notes without
+the passphrase.</p>
+<p>The encryption flow is in
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/wallet/crypter.h" target="_blank" rel="noopener noreferrer" class="">src/wallet/crypter.{h,cpp}</a>:
+AES-256-CBC over a passphrase-derived key (iterated SHA-512).</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="witness-data">Witness data<a href="#witness-data" class="hash-link" aria-label="Direct link to Witness data" title="Direct link to Witness data" translate="no">​</a></h4>
+<p>For each unspent Sapling and Orchard note, the wallet stores an
+authentication path from the note&#x27;s commitment to a recent
+anchor. The serialised form lives under the <code>witnesscache_v3</code>
+key (and earlier <code>v2</code>, <code>v1</code> for legacy data); the in-memory
+representation is in
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/rust/src/wallet.rs" target="_blank" rel="noopener noreferrer" class="">src/rust/src/wallet.rs</a>.</p>
+<p>Witnesses are derivable from chain data; a wallet that loses
+them can rebuild by rescanning (<code>-rescan</code>). They are stored
+explicitly because rescanning the chain is slow.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="inspect">Inspect<a href="#inspect" class="hash-link" aria-label="Direct link to Inspect" title="Direct link to Inspect" translate="no">​</a></h4>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">zcash-cli dumpwallet /tmp/wallet-dump.txt    </span><span class="token comment" style="color:#999988;font-style:italic"># human-readable secrets export</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">zcash-cli z_exportwallet /tmp/zwallet.txt    </span><span class="token comment" style="color:#999988;font-style:italic"># shielded keys included</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">zcashd-wallet-tool </span><span class="token punctuation" style="color:#393A34">..</span><span class="token plain">.                       </span><span class="token comment" style="color:#999988;font-style:italic"># offline migrations</span><br></div></code></pre></div></div>
+<p>For raw BDB inspection (daemon stopped):</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">db_dump </span><span class="token parameter variable" style="color:#36acaa">-p</span><span class="token plain"> wallet.dat </span><span class="token operator" style="color:#393A34">|</span><span class="token plain"> </span><span class="token function" style="color:#d73a49">less</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Note: BDB on-disk format is opaque without zcashd-side knowledge.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Prefer dumpwallet / z_exportwallet wherever possible.</span><br></div></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="operational-storage">Operational storage<a href="#operational-storage" class="hash-link" aria-label="Direct link to Operational storage" title="Direct link to Operational storage" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="peersdat"><code>peers.dat</code><a href="#peersdat" class="hash-link" aria-label="Direct link to peersdat" title="Direct link to peersdat" translate="no">​</a></h4>
+<p>Serialised <code>CAddrMan</code> state: the new/tried tables of known peer
+addresses. Written periodically and on shutdown by
+<code>CAddrDB::Write</code>:</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/addrdb.h (CAddrDB)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/addrdb.h#L1-L80" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<p>Lose it and the node will rebootstrap from DNS seeds on next
+start.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="banlistdat"><code>banlist.dat</code><a href="#banlistdat" class="hash-link" aria-label="Direct link to banlistdat" title="Direct link to banlistdat" translate="no">​</a></h4>
+<p>Serialised list of banned peers (with expiry times). Written by
+<code>CAddrDB::DumpBanlist</code>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="mempooldat"><code>mempool.dat</code><a href="#mempooldat" class="hash-link" aria-label="Direct link to mempooldat" title="Direct link to mempooldat" translate="no">​</a></h4>
+<p>Snapshot of the mempool at shutdown. Loaded on startup so that a
+restarted node does not lose its mempool. Format: serialised
+list of <code>(timestamp, fee_delta, CTransaction)</code>. Saved every 15
+minutes and on clean shutdown.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">zcash-cli getmempoolinfo</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">zcash-cli savemempool                         </span><span class="token comment" style="color:#999988;font-style:italic"># force a snapshot</span><br></div></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="fee_estimatesdat"><code>fee_estimates.dat</code><a href="#fee_estimatesdat" class="hash-link" aria-label="Direct link to fee_estimatesdat" title="Direct link to fee_estimatesdat" translate="no">​</a></h4>
+<p>Serialised state of the fee estimator (an EMA of confirmation
+times at various fee rates). Used by <code>estimatefee</code>. Rebuilt over
+time; not critical.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="debuglog"><code>debug.log</code><a href="#debuglog" class="hash-link" aria-label="Direct link to debuglog" title="Direct link to debuglog" translate="no">​</a></h4>
+<p>The main log. Default location <code>&lt;datadir&gt;/debug.log</code>. Rotated by
+restart only (no built-in log rotation). Verbosity controlled by
+<code>-debug=&lt;category&gt;</code> flags; the Rust subsystems route through
+<code>tracing</code> and are bridged into the C++ logger in
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/rust/src/tracing_ffi.rs" target="_blank" rel="noopener noreferrer" class="">src/rust/src/tracing_ffi.rs</a>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="cookie"><code>.cookie</code><a href="#cookie" class="hash-link" aria-label="Direct link to cookie" title="Direct link to cookie" translate="no">​</a></h4>
+<p>Per-run RPC auth cookie. Mode 0600. Used by <code>zcash-cli</code> to
+authenticate when no <code>-rpcuser</code>/<code>-rpcpassword</code> is set.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="lock"><code>.lock</code><a href="#lock" class="hash-link" aria-label="Direct link to lock" title="Direct link to lock" translate="no">​</a></h4>
+<p>Empty file held by <code>flock()</code>. Prevents two zcashd processes from
+sharing one datadir.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="a-summary-table">A summary table<a href="#a-summary-table" class="hash-link" aria-label="Direct link to A summary table" title="Direct link to A summary table" translate="no">​</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Path</th><th>Layer</th><th>Purpose</th><th>Format</th><th>Survives across versions?</th></tr></thead><tbody><tr><td><code>blocks/blk*.dat</code></td><td>Protocol</td><td>Raw serialised blocks</td><td>Custom binary</td><td>Yes</td></tr><tr><td><code>blocks/rev*.dat</code></td><td>Protocol</td><td>Undo data for reorgs</td><td>Custom binary</td><td>Yes</td></tr><tr><td><code>blocks/index/</code></td><td>Protocol</td><td>Block-hash -&gt; location index</td><td>LevelDB</td><td>Re-buildable with <code>-reindex</code></td></tr><tr><td><code>chainstate/</code></td><td>Protocol</td><td>UTXOs, nullifiers, anchors, tree roots</td><td>LevelDB</td><td>Re-buildable with <code>-reindex-chainstate</code></td></tr><tr><td><code>~/.zcash-params/</code></td><td>Protocol</td><td>Sapling/Sprout proving + verifying keys</td><td>Custom binary (Groth16 keys)</td><td>Yes; tied to MPC ceremony output</td></tr><tr><td><code>blocks/index/</code> (with <code>-txindex</code>)</td><td>Indexing</td><td>txid -&gt; location</td><td>LevelDB</td><td>Re-buildable</td></tr><tr><td>same backing (<code>-addressindex</code>)</td><td>Indexing</td><td>script -&gt; txes</td><td>LevelDB</td><td>Re-buildable</td></tr><tr><td>same backing (<code>-spentindex</code>)</td><td>Indexing</td><td>outpoint -&gt; spender</td><td>LevelDB</td><td>Re-buildable</td></tr><tr><td>same backing (<code>-timestampindex</code>)</td><td>Indexing</td><td>time -&gt; blocks</td><td>LevelDB</td><td>Re-buildable</td></tr><tr><td><code>wallet.dat</code> + <code>database/</code></td><td>Wallet</td><td>Keys, addresses, txes, witnesses</td><td>BerkeleyDB 6.2</td><td>Yes; user-owned</td></tr><tr><td><code>peers.dat</code></td><td>Operational</td><td>Addrman state</td><td>Serialised CAddrMan</td><td>Re-buildable from DNS seeds</td></tr><tr><td><code>banlist.dat</code></td><td>Operational</td><td>Banned peers</td><td>Serialised CBanEntry</td><td>Re-buildable</td></tr><tr><td><code>mempool.dat</code></td><td>Operational</td><td>Mempool snapshot at shutdown</td><td>Serialised tx list</td><td>Re-buildable</td></tr><tr><td><code>fee_estimates.dat</code></td><td>Operational</td><td>Fee estimator EMA</td><td>Serialised</td><td>Re-buildable</td></tr><tr><td><code>.cookie</code></td><td>Operational</td><td>RPC auth</td><td>Random 32 bytes</td><td>No; per-run</td></tr><tr><td><code>debug.log</code></td><td>Operational</td><td>Main log</td><td>Plain text</td><td>No</td></tr><tr><td><code>.lock</code></td><td>Operational</td><td>Process lock</td><td>Empty</td><td>No</td></tr></tbody></table>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-failure-modes">4. Failure modes<a href="#4-failure-modes" class="hash-link" aria-label="Direct link to 4. Failure modes" title="Direct link to 4. Failure modes" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Corrupting <code>chainstate/</code> mid-write.</strong> A crash during a flush
+can leave the database inconsistent. zcashd attempts to detect
+this at startup and asks the operator to <code>-reindex-chainstate</code>.
+Caught by: the on-startup integrity check in
+<code>CChainStateBlockHeaderTreeDB::LoadBlockIndexGuts</code>. No
+automated test in this workspace; caught operationally.</li>
+<li class=""><strong>Backing up <code>wallet.dat</code> while the daemon is running.</strong>
+Partial BDB state. Caught by: BDB refusing to open or returning
+bogus data on restore. Always use <code>backupwallet</code>.</li>
+<li class=""><strong>Mixing chainstate from different network upgrades.</strong> A
+chainstate built before NU5 cannot validate blocks after NU5
+without a reindex (the Orchard anchor set does not exist in
+the old chainstate). Caught by: assertion failure on the first
+v5 transaction.</li>
+<li class=""><strong>Enabling <code>-txindex</code> after the fact without <code>-reindex</code>.</strong> Some
+RPCs will return &quot;no such txid&quot; for historical transactions.
+Caught by: <code>getrawtransaction</code> failures.</li>
+<li class=""><strong>Disk-full during block write.</strong> Block file rotation can fail;
+the node halts with <code>AbortNode(&quot;Disk space too low!&quot;)</code>.
+Caught by: an explicit disk-space check before each block
+write.</li>
+<li class=""><strong>Losing <code>peers.dat</code>.</strong> Node falls back to DNS seeds. Slow
+reconnect. Not catastrophic.</li>
+<li class=""><strong>Losing the wallet but keeping the seed.</strong> Recoverable for
+transparent keys (re-derive via BIP-32). Recoverable for
+shielded keys (re-derive via ZIP-32, then <code>-rescan</code> to
+reconstruct witnesses). The HD seed is the single load-bearing
+secret; protect it.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-spec-pointers">5. Spec pointers<a href="#5-spec-pointers" class="hash-link" aria-label="Direct link to 5. Spec pointers" title="Direct link to 5. Spec pointers" translate="no">​</a></h2>
+<p>The protocol specification is silent on storage formats: storage
+is an implementation concern. Cross-implementation interop
+happens at the wire level. Useful pointers:</p>
+<ul>
+<li class=""><a href="https://en.bitcoin.it/wiki/Data_directory" target="_blank" rel="noopener noreferrer" class="">Bitcoin Core: data directory</a>
+for the inherited block file format and <code>peers.dat</code> layout
+(zcashd diverges in details, agrees in structure).</li>
+<li class=""><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/doc/reduce-traffic.md" target="_blank" rel="noopener noreferrer" class="">doc/reduce-traffic.md</a>
+for the operational knobs (<code>-prune</code>, <code>-maxuploadtarget</code>).</li>
+<li class=""><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/doc/zmq.md" target="_blank" rel="noopener noreferrer" class="">doc/zmq.md</a>
+for ZMQ event publishing, which is the supported way to
+consume chain events without scraping LevelDB.</li>
+<li class="">The
+<a href="https://github.com/google/leveldb/blob/main/doc/index.md" target="_blank" rel="noopener noreferrer" class="">LevelDB design</a>
+for the underlying engine. zcashd vendored LevelDB lives in
+<a href="https://github.com/zcash/zcash/tree/v5.5.0-rc1/src/leveldb" target="_blank" rel="noopener noreferrer" class="">src/leveldb/</a>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="6-exercises">6. Exercises<a href="#6-exercises" class="hash-link" aria-label="Direct link to 6. Exercises" title="Direct link to 6. Exercises" translate="no">​</a></h2>
+<ol>
+<li class="">
+<p><strong>Estimate datadir size.</strong> On a fully synced mainnet node,
+measure each subdirectory:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token function" style="color:#d73a49">du</span><span class="token plain"> </span><span class="token parameter variable" style="color:#36acaa">-sh</span><span class="token plain"> ~/.zcash/blocks ~/.zcash/chainstate ~/.zcash/wallet.dat</span><br></div></code></pre></div></div>
+<p>Roughly what fraction is each? Answer (typical 2026 mainnet):
+<code>blocks/</code> dominates (raw blocks), <code>chainstate/</code> is much smaller,
+<code>wallet.dat</code> depends on the user.</p>
+</li>
+<li class="">
+<p><strong>Trace a block on disk.</strong> Pick a recent block hash via
+<code>zcash-cli getbestblockhash</code>. Use
+<code>zcash-cli getblock &lt;hash&gt; 1</code> to find the height; cross-check
+the file-and-offset by reading the block-index entry via the
+debug RPC if your build supports it, otherwise via a custom
+LevelDB read against <code>blocks/index/</code>.</p>
+</li>
+<li class="">
+<p><strong>UTXO set summary.</strong> Run
+<code>zcash-cli gettxoutsetinfo</code> on a synced node. Note the total
+<code>transactions</code>, <code>txouts</code>, and <code>total_amount</code>. The latter must
+equal the issued subsidy minus any value locked in shielded
+pools (which is reported separately in <code>valuePools</code>).</p>
+</li>
+<li class="">
+<p><strong>Index toggle.</strong> Stop the daemon. Add <code>txindex=1</code> to
+<code>zcash.conf</code>. Restart with <code>-reindex</code> and time the rebuild.
+Confirm <code>getrawtransaction &lt;historical_txid&gt;</code> works
+afterward.</p>
+</li>
+<li class="">
+<p><strong>Wallet backup round-trip.</strong> Run <code>backupwallet /tmp/wallet.dat.backup</code>. Stop the daemon. Move the original
+<code>wallet.dat</code> aside. Copy the backup into place. Start. Verify
+<code>getbalance</code> returns the expected value and <code>z_listaddresses</code>
+returns the same set.</p>
+</li>
+<li class="">
+<p><strong>Modification exercise.</strong> Add a <code>getstoragelayout</code> RPC that
+returns a JSON object enumerating each of the on-disk
+artefacts in section 3 with their current size. Pattern is in
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/rpc/misc.cpp" target="_blank" rel="noopener noreferrer" class="">src/rpc/misc.cpp</a>;
+the size lookup uses <code>boost::filesystem::file_size</code>.</p>
+</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="7-further-reading">7. Further reading<a href="#7-further-reading" class="hash-link" aria-label="Direct link to 7. Further reading" title="Direct link to 7. Further reading" translate="no">​</a></h2>
+<ul>
+<li class="">Bitcoin Core&#x27;s
+<a href="https://github.com/bitcoin/bitcoin/blob/master/doc/files.md" target="_blank" rel="noopener noreferrer" class="">doc/files.md</a>
+for a more complete description of the upstream datadir
+conventions zcashd inherits.</li>
+<li class="">The
+<a href="https://github.com/google/leveldb/blob/main/doc/impl.md" target="_blank" rel="noopener noreferrer" class="">LevelDB implementation notes</a>.</li>
+<li class="">BerkeleyDB 6.2 reference for the wallet format (the legacy
+format will eventually be replaced; see
+<a class="" href="/zcashd/wallet-and-rpc">chapter 09</a>).</li>
+</ul></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/dannywillems/zcashd/edit/onboarding/onboarding/docs/08-storage.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/zcashd/zk-proofs-and-pools"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">zk-SNARKs and shielded pools</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/zcashd/wallet-and-rpc"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Wallet and RPC</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#1-why-this-chapter-exists" class="table-of-contents__link toc-highlight">1. Why this chapter exists</a></li><li><a href="#2-definitions" class="table-of-contents__link toc-highlight">2. Definitions</a></li><li><a href="#3-the-code-and-the-on-disk-layout" class="table-of-contents__link toc-highlight">3. The code and the on-disk layout</a><ul><li><a href="#datadir-layout-mainnet" class="table-of-contents__link toc-highlight">Datadir layout (mainnet)</a></li><li><a href="#protocol-storage" class="table-of-contents__link toc-highlight">Protocol storage</a></li><li><a href="#indexing-storage" class="table-of-contents__link toc-highlight">Indexing storage</a></li><li><a href="#wallet-storage" class="table-of-contents__link toc-highlight">Wallet storage</a></li><li><a href="#operational-storage" class="table-of-contents__link toc-highlight">Operational storage</a></li></ul></li><li><a href="#a-summary-table" class="table-of-contents__link toc-highlight">A summary table</a></li><li><a href="#4-failure-modes" class="table-of-contents__link toc-highlight">4. Failure modes</a></li><li><a href="#5-spec-pointers" class="table-of-contents__link toc-highlight">5. Spec pointers</a></li><li><a href="#6-exercises" class="table-of-contents__link toc-highlight">6. Exercises</a></li><li><a href="#7-further-reading" class="table-of-contents__link toc-highlight">7. Further reading</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">This course</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/dannywillems/zcashd/tree/onboarding/onboarding" target="_blank" rel="noopener noreferrer" class="footer__link-item">Source on GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/dannywillems/zcashd/issues" target="_blank" rel="noopener noreferrer" class="footer__link-item">Open an issue<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Upstream</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/zcash/zcash" target="_blank" rel="noopener noreferrer" class="footer__link-item">zcash/zcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/zcash/zcash/tree/v5.5.0-rc1" target="_blank" rel="noopener noreferrer" class="footer__link-item">Pinned tag: v5.5.0-rc1<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/zcash/librustzcash" target="_blank" rel="noopener noreferrer" class="footer__link-item">librustzcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Authoritative references</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://zips.z.cash/protocol/protocol.pdf" target="_blank" rel="noopener noreferrer" class="footer__link-item">Zcash Protocol Specification<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zips.z.cash/" target="_blank" rel="noopener noreferrer" class="footer__link-item">ZIPs index<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zcash.github.io/halo2/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Halo 2 book<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zcash.github.io/orchard/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Orchard book<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">zcashd onboarding course. Source pinned at v5.5.0-rc1.</div></div></div></footer></div>
+</body>
+</html>
