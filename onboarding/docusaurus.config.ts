@@ -6,7 +6,7 @@ import rehypeKatex from "rehype-katex";
 
 const ZCASH_PIN = "v5.5.0-rc1";
 const UPSTREAM_REPO = "https://github.com/zcash/zcash";
-const FORK_REPO = "https://github.com/dannywillems/zcash";
+const FORK_REPO = "https://github.com/dannywillems/zcashd";
 const FORK_BRANCH = "onboarding";
 
 const config: Config = {
@@ -15,7 +15,7 @@ const config: Config = {
   favicon: "img/favicon.ico",
 
   url: "https://dannywillems.github.io",
-  baseUrl: "/zcash/",
+  baseUrl: "/zcashd/",
 
   onBrokenLinks: "throw",
   onBrokenAnchors: "throw",

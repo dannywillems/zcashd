@@ -8,7 +8,7 @@ Anchors the chapter graph to ground truth.
 - Upstream repository: `https://github.com/zcash/zcash`
 - Pinned release tag: `v5.5.0-rc1` (the most recent ECC release at the
   time of bootstrap; used in every `<lang> reference` embed).
-- Course source repository (fork): `https://github.com/dannywillems/zcash`
+- Course source repository (fork): `https://github.com/dannywillems/zcashd`
 - Course branch: `onboarding`
 
 The pin determines URL stability of every live-source embed. If the

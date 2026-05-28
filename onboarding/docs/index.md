@@ -32,7 +32,7 @@ sources for consensus. The
 cryptographic primitives.
 
 Found a mistake? Open an issue on
-[the onboarding fork](https://github.com/dannywillems/zcash/issues) or
+[the onboarding fork](https://github.com/dannywillems/zcashd/issues) or
 edit the page directly via the "Edit this page" link at the bottom of
 each chapter.
 
@@ -179,7 +179,7 @@ Used throughout. Reuse these symbols rather than introducing new ones.
 
 This site is auto-generated; the course owners welcome corrections.
 For factual fixes, open an issue or pull request against the
-[onboarding branch on the fork](https://github.com/dannywillems/zcash/tree/onboarding/onboarding).
+[onboarding branch on the fork](https://github.com/dannywillems/zcashd/tree/onboarding/onboarding).
 For protocol-level corrections, the canonical place is the
 [ZIPs repository](https://github.com/zcash/zips) and the spec source
 under `protocol/`. For implementation bugs, file at
