@@ -68,6 +68,7 @@ prose need to be revisited.
 | 11 | [Reading plan](./11-reading-plan.md) | Six-week structured study plan with exercises | reference |
 | 12 | [Glossary](./12-glossary.md) | Domain abbreviations, with code anchors | reference |
 | 13 | [External references](./13-external-references.md) | ZIPs, papers, spec, related repos | reference |
+| 14 | [RPC reference](./14-rpc-reference.md) | Every JSON-RPC command by category, with source pointers | reference |
 
 Total active reading: roughly 30 hours. Plan to spend another 60-80
 hours running the node, instrumenting it, and writing patches against
