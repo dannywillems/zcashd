@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.1">
-<title data-rh="true">Context and history | zcashd onboarding</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://dannywillems.github.io/zcashd/context-and-history"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Context and history | zcashd onboarding"><meta data-rh="true" name="description" content="What zcashd is, who maintains it, where it sits in the Zcash ecosystem, and why the codebase looks the way it does."><meta data-rh="true" property="og:description" content="What zcashd is, who maintains it, where it sits in the Zcash ecosystem, and why the codebase looks the way it does."><link data-rh="true" rel="icon" href="/zcashd/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://dannywillems.github.io/zcashd/context-and-history"><link data-rh="true" rel="alternate" href="https://dannywillems.github.io/zcashd/context-and-history" hreflang="en"><link data-rh="true" rel="alternate" href="https://dannywillems.github.io/zcashd/context-and-history" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Context and history","item":"https://dannywillems.github.io/zcashd/context-and-history"}]}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5EGIE6RDQE0etf4GvjBR1bkf4pcUk2TprLGa0k7/rJkRnCu6WSt6" crossorigin="anonymous"><link rel="stylesheet" href="/zcashd/assets/css/styles.bddee692.css">
-<script src="/zcashd/assets/js/runtime~main.36c91a94.js" defer="defer"></script>
-<script src="/zcashd/assets/js/main.045bacb7.js" defer="defer"></script>
+<title data-rh="true">Context and history | zcashd onboarding</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://dannywillems.github.io/zcashd/context-and-history"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Context and history | zcashd onboarding"><meta data-rh="true" name="description" content="What zcashd is, who maintains it, where it sits in the Zcash ecosystem, and why the codebase looks the way it does."><meta data-rh="true" property="og:description" content="What zcashd is, who maintains it, where it sits in the Zcash ecosystem, and why the codebase looks the way it does."><link data-rh="true" rel="icon" href="/zcashd/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://dannywillems.github.io/zcashd/context-and-history"><link data-rh="true" rel="alternate" href="https://dannywillems.github.io/zcashd/context-and-history" hreflang="en"><link data-rh="true" rel="alternate" href="https://dannywillems.github.io/zcashd/context-and-history" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Context and history","item":"https://dannywillems.github.io/zcashd/context-and-history"}]}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/katex.min.css" integrity="sha384-nH0MfJ44wi1dd7w6jinlyBgljjS8EJAh2JBoRad8a3VDw2K69vfaaqm4WnR+gXtA" crossorigin="anonymous"><link rel="stylesheet" href="/zcashd/assets/css/styles.bddee692.css">
+<script src="/zcashd/assets/js/runtime~main.de946dac.js" defer="defer"></script>
+<script src="/zcashd/assets/js/main.1dbc7fca.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -42,7 +42,7 @@ implementations: zcashd (this repo, C++/Rust) and zebrad
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-the-code">3. The code<a href="#3-the-code" class="hash-link" aria-label="Direct link to 3. The code" title="Direct link to 3. The code" translate="no">​</a></h2>
 <p>The first line in <code>zcashd</code>&#x27;s daemon entry point is the easiest anchor
 for &quot;is this code Bitcoin or Zcash&quot;:</p>
-<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/bitcoind.cpp (entry point)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/bitcoind.cpp#L1-L40" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/bitcoind.cpp (main entry point)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/bitcoind.cpp#L216-L225" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
 <p>The deprecation guard is one of the operational artefacts unique to
 zcashd. It is not a consensus rule; it forces nodes that have not been
 updated in roughly four months to halt:</p>
@@ -73,7 +73,7 @@ it would step back from zcashd maintenance and concentrate on the
 wallet (Zashi) and on protocol research. The Zcash Foundation continues
 zebrad.</p>
 <p>ZODL (Zcash Open Development Layer) was created to take over zcashd
-maintenance. The reader is presumed to be joining ZODL.</p>
+maintenance.</p>
 <p>Check <code>doc/authors.md</code> and the recent git log. The standard
 &quot;who is active right now&quot; probe:</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token function" style="color:#d73a49">git</span><span class="token plain"> shortlog </span><span class="token parameter variable" style="color:#36acaa">-sne</span><span class="token plain"> </span><span class="token parameter variable" style="color:#36acaa">--since</span><span class="token operator" style="color:#393A34">=</span><span class="token string" style="color:#e3116c">&quot;2 years ago&quot;</span><br></div></code></pre></div></div>
@@ -172,10 +172,40 @@ table for mainnet is implemented in <code>src/consensus/upgrades.cpp</code>:</p>
 
 
 
-<table><thead><tr><th>Upgrade</th><th>Branch ID</th><th>Height</th><th>What activates</th></tr></thead><tbody><tr><td>Sprout</td><td>0x00000000</td><td>genesis</td><td>original Zerocash chain</td></tr><tr><td>Overwinter</td><td>0x5ba81b19</td><td>347500</td><td>transaction expiry, v3 tx</td></tr><tr><td>Sapling</td><td>0x76b809bb</td><td>419200</td><td>Sapling spends and outputs, v4 tx</td></tr><tr><td>Blossom</td><td>0x2bb40e60</td><td>653600</td><td>75-second block target</td></tr><tr><td>Heartwood</td><td>0xf5b9230b</td><td>903000</td><td>shielded coinbase, ZIP-221 history MMR</td></tr><tr><td>Canopy</td><td>0xe9ff75a6</td><td>1046400</td><td>funding streams replace founders reward</td></tr><tr><td>NU5</td><td>0xc2d6d0b4</td><td>1687104</td><td>Orchard, v5 tx, ZIP-244</td></tr></tbody></table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Upgrade</th><th>Branch ID</th><th>Height</th><th>Date</th><th>What activates</th></tr></thead><tbody><tr><td>Sprout</td><td>0x00000000</td><td>genesis</td><td>2016-10-28</td><td>original Zerocash chain</td></tr><tr><td>Overwinter</td><td>0x5ba81b19</td><td>347500</td><td>2018-06-25</td><td>transaction expiry, v3 tx</td></tr><tr><td>Sapling</td><td>0x76b809bb</td><td>419200</td><td>2018-10-28</td><td>Sapling spends and outputs, v4 tx</td></tr><tr><td>Blossom</td><td>0x2bb40e60</td><td>653600</td><td>2019-12-11</td><td>75-second block target</td></tr><tr><td>Heartwood</td><td>0xf5b9230b</td><td>903000</td><td>2020-07-16</td><td>shielded coinbase, ZIP-221 history MMR</td></tr><tr><td>Canopy</td><td>0xe9ff75a6</td><td>1046400</td><td>2020-11-18</td><td>funding streams replace founders reward</td></tr><tr><td>NU5</td><td>0xc2d6d0b4</td><td>1687104</td><td>2022-05-31</td><td>Orchard, v5 tx, ZIP-244</td></tr><tr><td>NU6</td><td>0xc8e71055</td><td>2726400</td><td>2024-11-23</td><td>new development funding streams (ZIP-1015 / ZIP-214 update); see ZIP-253</td></tr><tr><td>NU6.1</td><td>0x4dec4df0</td><td>3146400</td><td>2025-11-24</td><td>community / coinholder funding model (ZIP-1016), deferred dev-fund lockbox disbursement (ZIP-271); see ZIP-255</td></tr></tbody></table>
 <p><code>UPGRADE_ZFUTURE</code> is an integration-testing placeholder, not a real
-upgrade. There is no NU6 in this codebase at the time of writing
-(zcashd v5.5.0-rc1 was the last ECC release).</p>
+upgrade. <strong>NU6 and NU6.1 are NOT in this codebase</strong>: the course is
+pinned to upstream tag <code>v5.5.0-rc1</code> (the last ECC release, predating
+NU6). On a current mainnet node the active branch ID is therefore
+either <code>0xc8e71055</code> (NU6) or <code>0x4dec4df0</code> (NU6.1) rather than NU5,
+and the table entries above for those rows are facts about the
+network, not about this code. The fork that contains them lives on
+the master / current branches of upstream
+<a href="https://github.com/zcash/zcash" target="_blank" rel="noopener noreferrer" class="">zcash/zcash</a>; compare
+<code>src/consensus/upgrades.cpp</code> there against the v5.5.0-rc1 snapshot
+embedded in this course.</p>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="trusted-setups">Trusted setups<a href="#trusted-setups" class="hash-link" aria-label="Direct link to Trusted setups" title="Direct link to Trusted setups" translate="no">​</a></h3>
 <p>Sprout used a Multi-Party Computation ceremony with six participants
 in October 2016. Sapling used a much larger Powers of Tau ceremony in
