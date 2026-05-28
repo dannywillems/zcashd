@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-index" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.10.1">
+<title data-rh="true">Home | zcashd onboarding</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://dannywillems.github.io/zcashd/"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Home | zcashd onboarding"><meta data-rh="true" name="description" content="Graduate-level onboarding to the zcashd codebase: course map, threat model, notation, disclaimer."><meta data-rh="true" property="og:description" content="Graduate-level onboarding to the zcashd codebase: course map, threat model, notation, disclaimer."><link data-rh="true" rel="icon" href="/zcashd/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://dannywillems.github.io/zcashd/"><link data-rh="true" rel="alternate" href="https://dannywillems.github.io/zcashd/" hreflang="en"><link data-rh="true" rel="alternate" href="https://dannywillems.github.io/zcashd/" hreflang="x-default"><script data-rh="true">function insertBanner(){var n=document.createElement("div");n.id="__docusaurus-base-url-issue-banner-container";n.innerHTML='\n<div id="__docusaurus-base-url-issue-banner" style="border: thick solid red; background-color: rgb(255, 230, 179); margin: 20px; padding: 20px; font-size: 20px;">\n   <p style="font-weight: bold; font-size: 30px;">Your Docusaurus site did not load properly.</p>\n   <p>A very common reason is a wrong site <a href="https://docusaurus.io/docs/docusaurus.config.js/#baseUrl" style="font-weight: bold;">baseUrl configuration</a>.</p>\n   <p>Current configured baseUrl = <span style="font-weight: bold; color: red;">/zcashd/</span> </p>\n   <p>We suggest trying baseUrl = <span id="__docusaurus-base-url-issue-banner-suggestion-container" style="font-weight: bold; color: green;"></span></p>\n</div>\n',document.body.prepend(n);var e=document.getElementById("__docusaurus-base-url-issue-banner-suggestion-container"),s=window.location.pathname,o="/"===s.substr(-1)?s:s+"/";e.innerHTML=o}document.addEventListener("DOMContentLoaded",function(){void 0===window.docusaurus&&insertBanner()})</script><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://dannywillems.github.io/zcashd/"}]}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5EGIE6RDQE0etf4GvjBR1bkf4pcUk2TprLGa0k7/rJkRnCu6WSt6" crossorigin="anonymous"><link rel="stylesheet" href="/zcashd/assets/css/styles.bddee692.css">
+<script src="/zcashd/assets/js/runtime~main.7431a545.js" defer="defer"></script>
+<script src="/zcashd/assets/js/main.0beba01f.js" defer="defer"></script>
+</head>
+<body>
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{const n=new URLSearchParams(window.location.search).entries();for(var[t,e]of n)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}(),document.documentElement.setAttribute("data-announcement-bar-initially-dismissed",function(){try{return"true"===localStorage.getItem("docusaurus.announcement.dismiss")}catch(t){}return!1}())</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><div class="theme-announcement-bar announcementBar_mb4j" style="background-color:#fef3c7;color:#78350f" role="banner"><div class="content_knG7 announcementBarContent_xLdY">This site is automatically generated using Claude Code. Errors may have been introduced. The code is the law, always refer to the source in the <a href="https://github.com/zcash/librustzcash">librustzcash workspace</a>.</div></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/zcashd/"><b class="navbar__title text--truncate">zcashd onboarding</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/zcashd/">Course</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><a href="https://github.com/dannywillems/zcashd/tree/onboarding/onboarding" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Source<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><a href="https://github.com/zcash/zcash" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">zcash/zcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"><div class="navbar__search searchBarContainer_NW3z" dir="ltr"><input placeholder="Search" aria-label="Search" class="navbar__search-input searchInput_YFbd" value=""><div class="loadingRing_RJI3 searchBarLoadingRing_YnHq"><div></div><div></div><div></div><div></div></div></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG menuWithAnnouncementBar_GW3s"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" href="/zcashd/"><span title="Home" class="linkLabel_WmDU">Home</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/context-and-history"><span title="Context and history" class="linkLabel_WmDU">Context and history</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/build-system"><span title="Build system and contribution loop" class="linkLabel_WmDU">Build system and contribution loop</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/code-organization"><span title="Code organization" class="linkLabel_WmDU">Code organization</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/consensus"><span title="Consensus" class="linkLabel_WmDU">Consensus</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/p2p-networking"><span title="P2P networking" class="linkLabel_WmDU">P2P networking</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/cryptography"><span title="Cryptography (non-ZK)" class="linkLabel_WmDU">Cryptography (non-ZK)</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/zk-proofs-and-pools"><span title="zk-SNARKs and shielded pools" class="linkLabel_WmDU">zk-SNARKs and shielded pools</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/wallet-and-rpc"><span title="Wallet and RPC" class="linkLabel_WmDU">Wallet and RPC</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/testing"><span title="Testing" class="linkLabel_WmDU">Testing</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/reading-plan"><span title="Reading plan: six weeks" class="linkLabel_WmDU">Reading plan: six weeks</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/glossary"><span title="Glossary" class="linkLabel_WmDU">Glossary</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/external-references"><span title="External references" class="linkLabel_WmDU">External references</span></a></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/zcashd/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">Home</span></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>zcashd onboarding</h1></header>
+<p>A graduate course on the zcashd codebase. The intent is to take a
+principal cryptography engineer from &quot;I know cryptography but zcashd is
+a 200k-line Bitcoin fork&quot; to &quot;I can navigate, audit, and modify any
+subsystem&quot;.</p>
+<p>The course is structured as a self-paced reading guide. Each chapter
+teaches one subsystem and points to the exact files, functions, ZIPs,
+and external documents to read. It is paired with a six-week
+hands-on reading plan (chapter 10) that converges on a real merged
+PR.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg></span>Auto-generated content</div><div class="admonitionContent_BuS1"><p>This site is generated by Claude Code and may contain errors,
+out-of-date file paths, or misstatements of fact. <strong>The code at
+<a href="https://github.com/zcash/zcash" target="_blank" rel="noopener noreferrer" class="">zcash/zcash</a> is the law.</strong> The Zcash
+Protocol Specification at
+<a href="https://zips.z.cash/protocol/protocol.pdf" target="_blank" rel="noopener noreferrer" class="">zips.z.cash/protocol/protocol.pdf</a>
+and the <a href="https://zips.z.cash/" target="_blank" rel="noopener noreferrer" class="">ZIPs index</a> are the authoritative
+sources for consensus. The
+<a href="https://github.com/zcash/librustzcash" target="_blank" rel="noopener noreferrer" class="">librustzcash</a> and
+<a href="https://github.com/zcash/orchard" target="_blank" rel="noopener noreferrer" class="">orchard</a> repositories own the
+cryptographic primitives.</p><p>Found a mistake? Open an issue on
+<a href="https://github.com/dannywillems/zcashd/issues" target="_blank" rel="noopener noreferrer" class="">the onboarding fork</a> or
+edit the page directly via the &quot;Edit this page&quot; link at the bottom of
+each chapter.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="source-pin">Source pin<a href="#source-pin" class="hash-link" aria-label="Direct link to Source pin" title="Direct link to Source pin" translate="no">​</a></h2>
+<p>Live source embeds and direct links in this course point to upstream
+tag <strong><code>v5.5.0-rc1</code></strong>, the most recent ECC release at the time the
+course was written. Renames after that tag will leave embedded links
+intact but the line ranges may drift. The pin lives in
+<code>docusaurus.config.ts</code> as <code>ZCASH_PIN</code>.</p>
+<p>For mathematical statements about the protocol, the pin should be read
+as &quot;the consensus rules as of NU5 (NU5 activation: mainnet height
+1687104)&quot;. When a new network upgrade activates, both the tag and the
+prose need to be revisited.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="reading-order">Reading order<a href="#reading-order" class="hash-link" aria-label="Direct link to Reading order" title="Direct link to Reading order" translate="no">​</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>#</th><th>Chapter</th><th>Topic</th><th>Reading time</th></tr></thead><tbody><tr><td>01</td><td><a class="" href="/zcashd/context-and-history">Context and history</a></td><td>What zcashd is, who maintains it, ecosystem</td><td>1 hour</td></tr><tr><td>02</td><td><a class="" href="/zcashd/build-system">Build system and contribution loop</a></td><td>autotools + depends + Cargo + local dev</td><td>2 hours</td></tr><tr><td>03</td><td><a class="" href="/zcashd/code-organization">Code organization</a></td><td>Map of <code>src/</code> and <code>src/rust/</code></td><td>3 hours</td></tr><tr><td>04</td><td><a class="" href="/zcashd/consensus">Consensus</a></td><td>Validation pipeline, NU machinery, branch IDs</td><td>4 hours</td></tr><tr><td>05</td><td><a class="" href="/zcashd/p2p-networking">P2P networking</a></td><td>Wire protocol, peer lifecycle, mempool relay</td><td>3 hours</td></tr><tr><td>06</td><td><a class="" href="/zcashd/cryptography">Cryptography</a></td><td>Hashes, Equihash, signatures, BLAKE2 personalization</td><td>4 hours</td></tr><tr><td>07</td><td><a class="" href="/zcashd/zk-proofs-and-pools">zk-SNARKs and shielded pools</a></td><td>Sprout, Sapling, Orchard, batch verification</td><td>6 hours</td></tr><tr><td>08</td><td><a class="" href="/zcashd/wallet-and-rpc">Wallet and RPC</a></td><td>CWallet, ZIP-32, ZIP-316, RPC dispatch</td><td>3 hours</td></tr><tr><td>09</td><td><a class="" href="/zcashd/testing">Testing</a></td><td>gtest, Boost.Test, RPC framework, fuzzing</td><td>2 hours</td></tr><tr><td>10</td><td><a class="" href="/zcashd/reading-plan">Reading plan</a></td><td>Six-week structured study plan with exercises</td><td>reference</td></tr><tr><td>11</td><td><a class="" href="/zcashd/glossary">Glossary</a></td><td>Domain abbreviations, with code anchors</td><td>reference</td></tr><tr><td>12</td><td><a class="" href="/zcashd/external-references">External references</a></td><td>ZIPs, papers, spec, related repos</td><td>reference</td></tr></tbody></table>
+<p>Total active reading: roughly 30 hours. Plan to spend another 60-80
+hours running the node, instrumenting it, and writing patches against
+it before considering yourself fluent.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-this-course-is-not">What this course is not<a href="#what-this-course-is-not" class="hash-link" aria-label="Direct link to What this course is not" title="Direct link to What this course is not" translate="no">​</a></h2>
+<ul>
+<li class="">Not a cryptography tutorial. It assumes the reader knows what a
+Pedersen commitment, a Groth16 proof, a Schnorr signature, an IPA
+commitment, and a Merkle tree are.</li>
+<li class="">Not a Bitcoin tutorial. It assumes the reader knows what a UTXO,
+script, P2PKH, transaction malleability, and difficulty adjustment
+are.</li>
+<li class="">Not a replacement for the Zcash Protocol Specification. The spec is
+authoritative for consensus. This course teaches how the spec is
+realised in code.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="threat-model">Threat model<a href="#threat-model" class="hash-link" aria-label="Direct link to Threat model" title="Direct link to Threat model" translate="no">​</a></h2>
+<p>The system that this codebase implements is a privacy-preserving
+payment system with hard real-money consensus. The table below names
+the adversaries the protocol claims to defend against, the formal
+goal, where the defence lives, and where a regression would be
+caught.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Adversary capability</th><th>Formal goal</th><th>Defence in this workspace</th><th>Regression caught by</th></tr></thead><tbody><tr><td>Forge a transparent signature</td><td>EUF-CMA over secp256k1 ECDSA</td><td><code>src/secp256k1/</code> (vendored libsecp256k1)</td><td><code>src/test/script_tests.cpp</code>, <code>script_P2SH_tests.cpp</code></td></tr><tr><td>Spend a shielded note twice</td><td>Nullifier collision resistance</td><td>Sapling/Orchard nullifier set in UTXO view; per-NU <code>ContextualCheckTransaction</code> in <code>src/main.cpp</code></td><td><code>src/gtest/test_checktransaction.cpp</code>, <code>qa/rpc-tests/wallet_doublespend.py</code></td></tr><tr><td>Forge a shielded proof (Sapling)</td><td>Groth16 knowledge soundness over BLS12-381</td><td><code>src/rust/src/sapling.rs::BatchValidator</code> -&gt; <code>zcash_proofs::sapling</code></td><td><code>src/gtest/test_joinsplit.cpp</code>, Rust unit tests upstream</td></tr><tr><td>Forge a shielded proof (Orchard)</td><td>Halo 2 knowledge soundness (IPA over Pasta cycle)</td><td><code>src/rust/src/orchard_ffi.rs::BatchValidator</code> -&gt; <code>orchard</code> crate</td><td>upstream <code>orchard</code> crate tests, <code>qa/rpc-tests/wallet_orchard.py</code></td></tr><tr><td>Decrypt a shielded output the adversary does not own</td><td>KA-DH on Jubjub / Pallas, KDF-binding</td><td><code>src/rust/src/note_encryption.rs</code>; the <code>zcash_note_encryption</code> crate</td><td>upstream <code>zcash_note_encryption</code> tests</td></tr><tr><td>Malleate a signature to break sighash</td><td>ZIP-215 strict Ed25519 (Sprout), ZIP-216 canonical Jubjub</td><td><code>src/rust/src/ed25519.rs</code> (Zebra-strict); ZIP-216 in Rust</td><td><code>src/gtest/test_checktransaction.cpp</code> and upstream</td></tr><tr><td>Replay a tx across a network upgrade</td><td>Branch ID is part of the sighash post-Overwinter</td><td><code>nConsensusBranchId</code> enforced in <code>ContextualCheckTransaction</code></td><td><code>src/gtest/test_consensus.cpp</code>, <code>qa/rpc-tests/feature_zip244_blockcommitments.py</code></td></tr><tr><td>Counterfeit value (Sprout, CVE-2019-7167)</td><td>Soundness of Groth16 over patched parameters</td><td><code>sprout-groth16.params</code> distributed by <code>zcutil/fetch-params.sh</code>, loaded by <code>librustzcash_init_zksnark_params</code></td><td>No automated regression test in this workspace; caught by parameter integrity at load time</td></tr><tr><td>Equihash false solve</td><td>Generalized birthday hardness; (n,k)=(200,9) for mainnet</td><td><code>src/crypto/equihash.{h,cpp,tcc}</code>, called from <code>src/pow.cpp::CheckEquihashSolution</code></td><td><code>src/gtest/test_pow.cpp</code></td></tr><tr><td>Withhold turnstile balance from a pool</td><td>ZIP-209 turnstile enforcement</td><td><code>src/main.cpp::ConnectBlock</code> checks the pool-balance accumulator</td><td><code>qa/rpc-tests/turnstile.py</code></td></tr><tr><td>Reveal sender via on-wire metadata</td><td>Mitigated by Tor; not formally proven</td><td><code>-onlynet=onion</code>, no IP advertisement under Tor</td><td>No automated test; operator concern</td></tr><tr><td>Reveal sender via tx-relay timing (Dandelion++)</td><td>Out of scope in this workspace</td><td>None; zcashd does not implement Dandelion++</td><td>Out of scope; rely on Tor</td></tr><tr><td>Steal funds from an encrypted wallet</td><td>Brute-force resistance of passphrase KDF</td><td><code>src/wallet/crypter.cpp</code> (iterated SHA-512, then AES-256-CBC)</td><td><code>src/wallet/test/crypter_tests.cpp</code></td></tr></tbody></table>
+<p>Rows are grouped by category:</p>
+<ul>
+<li class="">Rows 1 - 9: defended by cryptographic reduction or by direct
+consensus rule. A regression here is a security bug.</li>
+<li class="">Rows 10 - 11: defended by heuristic (turnstile is a cross-check, not
+a primitive proof). A regression is severe but recoverable.</li>
+<li class="">Rows 12 - 13: out of scope for the protocol layer. Operator
+responsibility.</li>
+</ul>
+<p>When you change code that touches any cell in this table, you must
+also update the test in the &quot;regression caught by&quot; column, or
+explicitly document why no test applies.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="notation">Notation<a href="#notation" class="hash-link" aria-label="Direct link to Notation" title="Direct link to Notation" translate="no">​</a></h2>
+<p>Used throughout. Reuse these symbols rather than introducing new ones.</p>
+<ul>
+<li class=""><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="double-struck">F</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">\mathbb{F}_p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.975em;vertical-align:-0.2861em"></span><span class="mord"><span class="mord mathbb">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em"><span></span></span></span></span></span></span></span></span></span>: a prime field of order <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em"></span><span class="mord mathnormal">p</span></span></span></span>.</li>
+<li class=""><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="double-struck">G</mi><mi>J</mi></msub></mrow><annotation encoding="application/x-tex">\mathbb{G}_J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathbb">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0962em">J</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="double-struck">G</mi><mi>P</mi></msub></mrow><annotation encoding="application/x-tex">\mathbb{G}_P</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathbb">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em">P</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span>: the Jubjub (Sapling) and Pallas
+(Orchard) curves, both used inside zero-knowledge circuits as
+embedded groups.</li>
+<li class=""><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="double-struck">G</mi><mrow><mi>B</mi><mi>L</mi><mi>S</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\mathbb{G}_{BLS}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathbb">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0502em">B</span><span class="mord mathnormal mtight">L</span><span class="mord mathnormal mtight" style="margin-right:0.0576em">S</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="double-struck">G</mi><mrow><mi>B</mi><mi>N</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\mathbb{G}_{BN}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.15em"></span><span class="mord"><span class="mord mathbb">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0502em">B</span><span class="mord mathnormal mtight" style="margin-right:0.109em">N</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span>: BLS12-381 and BN-254, the
+outer pairing-friendly curves for Sapling and Sprout.</li>
+<li class=""><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mi>P</mi></mrow><annotation encoding="application/x-tex">[k]P</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0315em">k</span><span class="mclose">]</span><span class="mord mathnormal" style="margin-right:0.1389em">P</span></span></span></span>: scalar multiplication of point <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi></mrow><annotation encoding="application/x-tex">P</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em"></span><span class="mord mathnormal" style="margin-right:0.1389em">P</span></span></span></span> by scalar <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em"></span><span class="mord mathnormal" style="margin-right:0.0315em">k</span></span></span></span>.</li>
+<li class=""><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mi mathvariant="normal">ℓ</mi></msub><mo stretchy="false">(</mo><mo>⋅</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">H_\ell(\cdot)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0813em">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em"><span style="top:-2.55em;margin-left:-0.0813em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">ℓ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord">⋅</span><span class="mclose">)</span></span></span></span>: a hash with <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">ℓ</mi></mrow><annotation encoding="application/x-tex">\ell</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em"></span><span class="mord">ℓ</span></span></span></span>-bit output.</li>
+<li class=""><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="sans-serif">B</mi><mi mathvariant="sans-serif">L</mi><mi mathvariant="sans-serif">A</mi><mi mathvariant="sans-serif">K</mi><mi mathvariant="sans-serif">E</mi><mn mathvariant="sans-serif">2</mn><mi mathvariant="sans-serif">b</mi></mrow><mtext>-</mtext><mi mathvariant="normal">ℓ</mi><mo stretchy="false">(</mo><mrow><mi mathvariant="sans-serif">p</mi><mi mathvariant="sans-serif">e</mi><mi mathvariant="sans-serif">r</mi><mi mathvariant="sans-serif">s</mi></mrow><mo separator="true">,</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathsf{BLAKE2b}\text{-}\ell(\mathsf{pers}, x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord"><span class="mord mathsf">BLAKE2b</span></span><span class="mord text"><span class="mord">-</span></span><span class="mord">ℓ</span><span class="mopen">(</span><span class="mord"><span class="mord mathsf">pers</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span>: BLAKE2b with output
+length <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">ℓ</mi></mrow><annotation encoding="application/x-tex">\ell</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em"></span><span class="mord">ℓ</span></span></span></span> bytes and personalisation string <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="sans-serif">p</mi><mi mathvariant="sans-serif">e</mi><mi mathvariant="sans-serif">r</mi><mi mathvariant="sans-serif">s</mi></mrow><annotation encoding="application/x-tex">\mathsf{pers}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6389em;vertical-align:-0.1944em"></span><span class="mord"><span class="mord mathsf">pers</span></span></span></span></span>.</li>
+<li class=""><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="sans-serif">C</mi><mi mathvariant="sans-serif">o</mi><mi mathvariant="sans-serif">m</mi></mrow><mo stretchy="false">(</mo><mi>m</mi><mo separator="true">;</mo><mi>r</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathsf{Com}(m; r)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord"><span class="mord mathsf">Com</span></span><span class="mopen">(</span><span class="mord mathnormal">m</span><span class="mpunct">;</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord mathnormal" style="margin-right:0.0278em">r</span><span class="mclose">)</span></span></span></span>: a commitment to message <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em"></span><span class="mord mathnormal">m</span></span></span></span> with randomness <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em"></span><span class="mord mathnormal" style="margin-right:0.0278em">r</span></span></span></span>.</li>
+<li class=""><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="sans-serif">E</mi><mi mathvariant="sans-serif">n</mi><mi mathvariant="sans-serif">c</mi></mrow><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\mathsf{Enc}_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em"></span><span class="mord"><span class="mord"><span class="mord mathsf">Enc</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em"><span style="top:-2.55em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="sans-serif">D</mi><mi mathvariant="sans-serif">e</mi><mi mathvariant="sans-serif">c</mi></mrow><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\mathsf{Dec}_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em"></span><span class="mord"><span class="mord"><span class="mord mathsf">Dec</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em"><span style="top:-2.55em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em"><span></span></span></span></span></span></span></span></span></span>: symmetric encryption and
+decryption with key <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em"></span><span class="mord mathnormal" style="margin-right:0.0315em">k</span></span></span></span>. In Zcash specifically, ChaCha20-Poly1305
+for Sapling note encryption.</li>
+<li class=""><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mrow><mi mathvariant="sans-serif">P</mi><mi mathvariant="sans-serif">R</mi><mi mathvariant="sans-serif">F</mi></mrow><mi>x</mi><mrow><mi mathvariant="sans-serif">n</mi><mi mathvariant="sans-serif">a</mi><mi mathvariant="sans-serif">m</mi><mi mathvariant="sans-serif">e</mi></mrow></msubsup><mo stretchy="false">(</mo><mo>⋅</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathsf{PRF}_x^{\mathsf{name}}(\cdot)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0084em;vertical-align:-0.25em"></span><span class="mord"><span class="mord"><span class="mord mathsf">PRF</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7584em"><span style="top:-2.453em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span><span style="top:-3.1473em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathsf mtight">name</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord">⋅</span><span class="mclose">)</span></span></span></span>: a Zcash-named pseudorandom
+function with key <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em"></span><span class="mord mathnormal">x</span></span></span></span>.</li>
+<li class=""><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="sans-serif">c</mi><mi mathvariant="sans-serif">m</mi></mrow><annotation encoding="application/x-tex">\mathsf{cm}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4444em"></span><span class="mord"><span class="mord mathsf">cm</span></span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="sans-serif">n</mi><mi mathvariant="sans-serif">f</mi></mrow><annotation encoding="application/x-tex">\mathsf{nf}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em"></span><span class="mord"><span class="mord mathsf" style="margin-right:0.0694em">nf</span></span></span></span></span>: a note commitment, a note nullifier.</li>
+<li class=""><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="sans-serif">i</mi><mi mathvariant="sans-serif">v</mi><mi mathvariant="sans-serif">k</mi></mrow><annotation encoding="application/x-tex">\mathsf{ivk}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em"></span><span class="mord"><span class="mord mathsf">ivk</span></span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="sans-serif">o</mi><mi mathvariant="sans-serif">v</mi><mi mathvariant="sans-serif">k</mi></mrow><annotation encoding="application/x-tex">\mathsf{ovk}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em"></span><span class="mord"><span class="mord mathsf">ovk</span></span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="sans-serif">a</mi><mi mathvariant="sans-serif">k</mi></mrow><annotation encoding="application/x-tex">\mathsf{ak}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em"></span><span class="mord"><span class="mord mathsf">ak</span></span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="sans-serif">n</mi><mi mathvariant="sans-serif">k</mi></mrow><annotation encoding="application/x-tex">\mathsf{nk}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em"></span><span class="mord"><span class="mord mathsf">nk</span></span></span></span></span>:
+Sapling incoming viewing key, outgoing viewing key, spend
+authorising key, nullifier deriving key.</li>
+<li class=""><span class="katex-error" title="ParseError: KaTeX parse error: Unexpected character: &#x27;\&#x27; at position 11: \stackrel{\̲" style="color:#cc0000">\stackrel{\</span>}{\leftarrow}$: uniform random sampling.</li>
+<li class=""><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo lspace="0.22em" rspace="0.22em"><mspace linebreak="newline"></mspace><mi mathvariant="normal">∣</mi></mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a \mathbin{\\|} b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222em"></span><span class="mbin"><span class="mspace newline"></span><span class="mord">∣</span></span><span class="mspace" style="margin-right:0.2222em"></span></span><span class="base"><span class="strut" style="height:0.6944em"></span><span class="mord mathnormal">b</span></span></span></span>: byte-string concatenation.</li>
+<li class=""><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>R</mi><mrow><mi mathvariant="sans-serif">S</mi><mi mathvariant="sans-serif">a</mi><mi mathvariant="sans-serif">p</mi><mi mathvariant="sans-serif">l</mi><mi mathvariant="sans-serif">i</mi><mi mathvariant="sans-serif">n</mi><mi mathvariant="sans-serif">g</mi></mrow></msup><mo separator="true">,</mo><msup><mi>R</mi><mrow><mi mathvariant="sans-serif">O</mi><mi mathvariant="sans-serif">r</mi><mi mathvariant="sans-serif">c</mi><mi mathvariant="sans-serif">h</mi><mi mathvariant="sans-serif">a</mi><mi mathvariant="sans-serif">r</mi><mi mathvariant="sans-serif">d</mi></mrow></msup></mrow><annotation encoding="application/x-tex">R^{\mathsf{Sapling}}, R^{\mathsf{Orchard}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0435em;vertical-align:-0.1944em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0077em">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em"><span style="top:-3.063em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathsf mtight" style="margin-right:0.0139em">Sapling</span></span></span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0077em">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em"><span style="top:-3.063em;margin-right:0.05em"><span class="pstrut" style="height:2.7em"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathsf mtight">Orchard</span></span></span></span></span></span></span></span></span></span></span></span></span>: the NP relations
+attested by the Sapling and Orchard spend / action proofs (see
+chapter 07).</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="conventions">Conventions<a href="#conventions" class="hash-link" aria-label="Direct link to Conventions" title="Direct link to Conventions" translate="no">​</a></h2>
+<ul>
+<li class="">File paths are given as <code>src/foo/bar.cpp</code> and are relative to the
+zcashd repo root unless absolute.</li>
+<li class="">Function names are written in their on-disk form, e.g.
+<code>ContextualCheckBlock</code>.</li>
+<li class="">&quot;Spec&quot; without qualification means the Zcash Protocol Specification
+PDF.</li>
+<li class="">&quot;ZIP-N&quot; refers to Zcash Improvement Proposal N at zips.z.cash.</li>
+<li class="">Live source embeds (the rendered code blocks below) link to the
+<code>v5.5.0-rc1</code> tag of <code>zcash/zcash</code> on GitHub.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-to-use-this-course">How to use this course<a href="#how-to-use-this-course" class="hash-link" aria-label="Direct link to How to use this course" title="Direct link to How to use this course" translate="no">​</a></h2>
+<ol>
+<li class="">Read chapters 01 and 02 first. Build the node end to end before
+anything else; nothing in this codebase makes sense until you have
+it running.</li>
+<li class="">Read 03 - 05 next: the code map, consensus, and P2P. These chapters
+lean on Bitcoin Core background; if Bitcoin is new, read
+&quot;Mastering Bitcoin&quot; chapters 5 - 9 in parallel.</li>
+<li class="">Read 06 - 08 in any order. These are the Zcash-specific parts.</li>
+<li class="">Use chapter 10 as the week-by-week to-do list.</li>
+<li class="">Use chapters 11 - 12 as reference indices.</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="where-to-file-corrections">Where to file corrections<a href="#where-to-file-corrections" class="hash-link" aria-label="Direct link to Where to file corrections" title="Direct link to Where to file corrections" translate="no">​</a></h2>
+<p>This site is auto-generated; the course owners welcome corrections.
+For factual fixes, open an issue or pull request against the
+<a href="https://github.com/dannywillems/zcashd/tree/onboarding/onboarding" target="_blank" rel="noopener noreferrer" class="">onboarding branch on the fork</a>.
+For protocol-level corrections, the canonical place is the
+<a href="https://github.com/zcash/zips" target="_blank" rel="noopener noreferrer" class="">ZIPs repository</a> and the spec source
+under <code>protocol/</code>. For implementation bugs, file at
+<a href="https://github.com/zcash/zcash/issues" target="_blank" rel="noopener noreferrer" class="">zcash/zcash issues</a>.</p></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/dannywillems/zcashd/edit/onboarding/onboarding/docs/index.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--next" href="/zcashd/context-and-history"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Context and history</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#source-pin" class="table-of-contents__link toc-highlight">Source pin</a></li><li><a href="#reading-order" class="table-of-contents__link toc-highlight">Reading order</a></li><li><a href="#what-this-course-is-not" class="table-of-contents__link toc-highlight">What this course is not</a></li><li><a href="#threat-model" class="table-of-contents__link toc-highlight">Threat model</a></li><li><a href="#notation" class="table-of-contents__link toc-highlight">Notation</a></li><li><a href="#conventions" class="table-of-contents__link toc-highlight">Conventions</a></li><li><a href="#how-to-use-this-course" class="table-of-contents__link toc-highlight">How to use this course</a></li><li><a href="#where-to-file-corrections" class="table-of-contents__link toc-highlight">Where to file corrections</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">This course</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/dannywillems/zcashd/tree/onboarding/onboarding" target="_blank" rel="noopener noreferrer" class="footer__link-item">Source on GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/dannywillems/zcashd/issues" target="_blank" rel="noopener noreferrer" class="footer__link-item">Open an issue<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Upstream</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/zcash/zcash" target="_blank" rel="noopener noreferrer" class="footer__link-item">zcash/zcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/zcash/zcash/tree/v5.5.0-rc1" target="_blank" rel="noopener noreferrer" class="footer__link-item">Pinned tag: v5.5.0-rc1<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/zcash/librustzcash" target="_blank" rel="noopener noreferrer" class="footer__link-item">librustzcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Authoritative references</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://zips.z.cash/protocol/protocol.pdf" target="_blank" rel="noopener noreferrer" class="footer__link-item">Zcash Protocol Specification<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zips.z.cash/" target="_blank" rel="noopener noreferrer" class="footer__link-item">ZIPs index<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zcash.github.io/halo2/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Halo 2 book<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zcash.github.io/orchard/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Orchard book<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">zcashd onboarding course. Source pinned at v5.5.0-rc1.</div></div></div></footer></div>
+</body>
+</html>

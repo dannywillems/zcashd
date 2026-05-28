@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-code-organization" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.10.1">
+<title data-rh="true">Code organization | zcashd onboarding</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://dannywillems.github.io/zcashd/code-organization"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Code organization | zcashd onboarding"><meta data-rh="true" name="description" content="A file-by-file map of src/ and src/rust/. The chapter you return to most often."><meta data-rh="true" property="og:description" content="A file-by-file map of src/ and src/rust/. The chapter you return to most often."><link data-rh="true" rel="icon" href="/zcashd/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://dannywillems.github.io/zcashd/code-organization"><link data-rh="true" rel="alternate" href="https://dannywillems.github.io/zcashd/code-organization" hreflang="en"><link data-rh="true" rel="alternate" href="https://dannywillems.github.io/zcashd/code-organization" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Code organization","item":"https://dannywillems.github.io/zcashd/code-organization"}]}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5EGIE6RDQE0etf4GvjBR1bkf4pcUk2TprLGa0k7/rJkRnCu6WSt6" crossorigin="anonymous"><link rel="stylesheet" href="/zcashd/assets/css/styles.bddee692.css">
+<script src="/zcashd/assets/js/runtime~main.7431a545.js" defer="defer"></script>
+<script src="/zcashd/assets/js/main.0beba01f.js" defer="defer"></script>
+</head>
+<body>
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{const n=new URLSearchParams(window.location.search).entries();for(var[t,e]of n)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}(),document.documentElement.setAttribute("data-announcement-bar-initially-dismissed",function(){try{return"true"===localStorage.getItem("docusaurus.announcement.dismiss")}catch(t){}return!1}())</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><div class="theme-announcement-bar announcementBar_mb4j" style="background-color:#fef3c7;color:#78350f" role="banner"><div class="content_knG7 announcementBarContent_xLdY">This site is automatically generated using Claude Code. Errors may have been introduced. The code is the law, always refer to the source in the <a href="https://github.com/zcash/librustzcash">librustzcash workspace</a>.</div></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/zcashd/"><b class="navbar__title text--truncate">zcashd onboarding</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/zcashd/">Course</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><a href="https://github.com/dannywillems/zcashd/tree/onboarding/onboarding" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Source<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><a href="https://github.com/zcash/zcash" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">zcash/zcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"><div class="navbar__search searchBarContainer_NW3z" dir="ltr"><input placeholder="Search" aria-label="Search" class="navbar__search-input searchInput_YFbd" value=""><div class="loadingRing_RJI3 searchBarLoadingRing_YnHq"><div></div><div></div><div></div><div></div></div></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG menuWithAnnouncementBar_GW3s"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/"><span title="Home" class="linkLabel_WmDU">Home</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/context-and-history"><span title="Context and history" class="linkLabel_WmDU">Context and history</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/build-system"><span title="Build system and contribution loop" class="linkLabel_WmDU">Build system and contribution loop</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" href="/zcashd/code-organization"><span title="Code organization" class="linkLabel_WmDU">Code organization</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/consensus"><span title="Consensus" class="linkLabel_WmDU">Consensus</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/p2p-networking"><span title="P2P networking" class="linkLabel_WmDU">P2P networking</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/cryptography"><span title="Cryptography (non-ZK)" class="linkLabel_WmDU">Cryptography (non-ZK)</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/zk-proofs-and-pools"><span title="zk-SNARKs and shielded pools" class="linkLabel_WmDU">zk-SNARKs and shielded pools</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/wallet-and-rpc"><span title="Wallet and RPC" class="linkLabel_WmDU">Wallet and RPC</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/testing"><span title="Testing" class="linkLabel_WmDU">Testing</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/reading-plan"><span title="Reading plan: six weeks" class="linkLabel_WmDU">Reading plan: six weeks</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/glossary"><span title="Glossary" class="linkLabel_WmDU">Glossary</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/external-references"><span title="External references" class="linkLabel_WmDU">External references</span></a></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/zcashd/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">Code organization</span></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Code organization</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-why-this-chapter-exists">1. Why this chapter exists<a href="#1-why-this-chapter-exists" class="hash-link" aria-label="Direct link to 1. Why this chapter exists" title="Direct link to 1. Why this chapter exists" translate="no">​</a></h2>
+<p><code>src/</code> contains roughly 90 loose <code>.cpp</code>/<code>.h</code> pairs (Bitcoin Core
+inheritance) plus a handful of Zcash-specific subdirectories. Without
+a map, a reader will spend hours grepping. This chapter is the map.
+It is intended to be returned to, not read once.</p>
+<p>The tree is wide rather than deep. Most navigation looks like
+<code>rg &quot;ProcessMessage&quot; src/</code> followed by reading 50 - 200 lines of
+context. Get comfortable with that workflow before reading on.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-definitions">2. Definitions<a href="#2-definitions" class="hash-link" aria-label="Direct link to 2. Definitions" title="Direct link to 2. Definitions" translate="no">​</a></h2>
+<p><strong>Definition 3.1 (Boundary).</strong> The boundary in zcashd is the
+Rust/C++ split. The C++ side owns networking, validation state
+machine, wallet storage, mempool, and RPC dispatch. The Rust side
+owns most of the cryptography (Sapling, Orchard, Halo 2, JoinSplit
+verifier glue, batch validators, note encryption, BLAKE2b, ed25519,
+history tree). Cross-language calls are expensive; batch validators
+amortise the cost.</p>
+<p><strong>Definition 3.2 (Subsystem).</strong> A coherent group of files with a
+single owning concern. The subsystems in zcashd are: entry points,
+chain/blocks/transactions, transactions/scripts/addresses, P2P, RPC,
+storage/serialisation, utility, consensus, Zcash-specific C++,
+crypto, wallet, Rust portion, policy, pow, zmq, fuzzing, bench, test.
+This chapter lists them all.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-the-code">3. The code<a href="#3-the-code" class="hash-link" aria-label="Direct link to 3. The code" title="Direct link to 3. The code" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="top-level-layout">Top-level layout<a href="#top-level-layout" class="hash-link" aria-label="Direct link to Top-level layout" title="Direct link to Top-level layout" translate="no">​</a></h3>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">Cargo.toml             root Cargo manifest (single crate, librustzcash)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">Cargo.lock             pinned Rust deps</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">configure.ac           autotools (~45k lines)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">Makefile.am            top-level make rules</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">autogen.sh             regenerates configure</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">rust-toolchain.toml    pinned Rust toolchain version</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">depends/               vendored C/C++ deps build system (see chapter 02)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">zcutil/                build helpers, parameter fetcher</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">contrib/               packaging, gitian, completions, docker, metrics</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">doc/                   release notes, contributor docs, ZMQ docs</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">qa/                    integration tests (RPC tests + supply-chain config)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">share/                 sample config, examples</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/                   all C++ and Rust source (rest of this chapter)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">test/                  empty/placeholder; real tests live elsewhere</span><br></div></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="entry-points">Entry points<a href="#entry-points" class="hash-link" aria-label="Direct link to Entry points" title="Direct link to Entry points" translate="no">​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>File</th><th>Role</th></tr></thead><tbody><tr><td><code>bitcoind.cpp</code></td><td>The <code>zcashd</code> daemon entry point. Wires <code>AppInit</code> to <code>AppInit2</code>.</td></tr><tr><td><code>bitcoin-cli.cpp</code></td><td>The <code>zcash-cli</code> JSON-RPC client.</td></tr><tr><td><code>bitcoin-tx.cpp</code></td><td>The <code>zcash-tx</code> standalone transaction builder.</td></tr><tr><td><code>init.cpp</code> / <code>init.h</code></td><td><code>AppInit2</code>: 2000 lines of &quot;bring the node up&quot;. Most important file to read once the node is built.</td></tr><tr><td><code>noui.cpp</code></td><td>Trivial UI implementation so that the daemon runs headless.</td></tr></tbody></table>
+<p><code>AppInit2</code> is worth quoting; it is the spine of node startup:</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/init.cpp (AppInit2 prologue)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/init.cpp#L900-L1000" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="chain-blocks-transactions">Chain, blocks, transactions<a href="#chain-blocks-transactions" class="hash-link" aria-label="Direct link to Chain, blocks, transactions" title="Direct link to Chain, blocks, transactions" translate="no">​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>File</th><th>Role</th></tr></thead><tbody><tr><td><code>main.cpp</code> / <code>main.h</code></td><td>8000+ lines. The consensus state machine: block validation, mempool acceptance, fork resolution. <code>ProcessNewBlock</code>, <code>ConnectBlock</code>, <code>AcceptBlock</code>, <code>ContextualCheckBlock</code>, <code>ProcessMessage</code>. Read in pieces.</td></tr><tr><td><code>chain.cpp</code> / <code>chain.h</code></td><td><code>CBlockIndex</code> (in-memory header chain), <code>CChain</code> (active chain).</td></tr><tr><td><code>chainparams.cpp</code> / <code>chainparams.h</code></td><td>Mainnet/testnet/regtest parameter selection. Activation heights, seeds, magic bytes.</td></tr><tr><td><code>chainparamsbase.cpp</code></td><td>Network-name-keyed base parameters.</td></tr><tr><td><code>chainparamsseeds.h</code></td><td>Hardcoded DNS seeds.</td></tr><tr><td><code>coins.cpp</code> / <code>coins.h</code></td><td><code>CCoinsView</code>, <code>CCoinsViewCache</code>: the UTXO set abstraction.</td></tr><tr><td><code>txdb.cpp</code></td><td>LevelDB persistence of UTXO and block index.</td></tr><tr><td><code>txmempool.cpp</code> / <code>txmempool.h</code></td><td>The mempool.</td></tr><tr><td><code>mempool_limit.cpp</code></td><td>Bound mempool by weighted cost (anti-DoS).</td></tr><tr><td><code>validationinterface.cpp</code></td><td>Pub/sub for &quot;block connected&quot; etc. The wallet subscribes here.</td></tr><tr><td><code>merkleblock.cpp</code></td><td>Partial Merkle trees for SPV.</td></tr><tr><td><code>pow.cpp</code> / <code>pow.h</code></td><td>Difficulty adjustment, Equihash check, mining target glue.</td></tr><tr><td><code>proof_verifier.cpp</code></td><td>Owns the Sapling and Sprout proof verifiers.</td></tr></tbody></table>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="transactions-scripts-addresses">Transactions, scripts, addresses<a href="#transactions-scripts-addresses" class="hash-link" aria-label="Direct link to Transactions, scripts, addresses" title="Direct link to Transactions, scripts, addresses" translate="no">​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>File</th><th>Role</th></tr></thead><tbody><tr><td><code>primitives/transaction.{h,cpp}</code></td><td><code>CTransaction</code>, the on-wire bundles. Read with the spec in hand.</td></tr><tr><td><code>primitives/block.{h,cpp}</code></td><td><code>CBlock</code>, <code>CBlockHeader</code>. Equihash solution lives here.</td></tr><tr><td><code>primitives/orchard.h</code></td><td>C++ shim wrapping the Orchard bundle owned by Rust.</td></tr><tr><td><code>script/script.{h,cpp}</code></td><td>Bitcoin Script opcodes and <code>CScript</code>.</td></tr><tr><td><code>script/interpreter.{h,cpp}</code></td><td>Script evaluation.</td></tr><tr><td><code>script/sign.{h,cpp}</code></td><td>Building signatures for transparent inputs.</td></tr><tr><td><code>script/standard.{h,cpp}</code></td><td>P2PKH/P2SH/multisig templates and address extraction.</td></tr><tr><td><code>script/zcash_script.{h,cpp}</code></td><td>Exported <code>libzcash_script</code> C API.</td></tr><tr><td><code>script/sigcache.cpp</code></td><td>Cache of validated ECDSA signatures.</td></tr><tr><td><code>script/ismine.{h,cpp}</code></td><td>Wallet-side &quot;do I own this script?&quot;.</td></tr><tr><td><code>key.cpp</code> / <code>pubkey.cpp</code></td><td>secp256k1 key pair (private/public).</td></tr><tr><td><code>keystore.cpp</code></td><td>In-memory keystore (legacy).</td></tr><tr><td><code>key_io.cpp</code></td><td>Base58/Bech32 address encoding, WIF encoding.</td></tr><tr><td><code>base58.cpp</code>, <code>bech32.cpp</code></td><td>The two address encoding formats.</td></tr></tbody></table>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="p2p">P2P<a href="#p2p" class="hash-link" aria-label="Direct link to P2P" title="Direct link to P2P" translate="no">​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>File</th><th>Role</th></tr></thead><tbody><tr><td><code>net.{h,cpp}</code></td><td>The socket and peer plumbing. <code>CNode</code>, <code>ThreadSocketHandler</code>, <code>ThreadMessageHandler</code>.</td></tr><tr><td><code>netbase.cpp</code></td><td><code>CNetAddr</code>, <code>CService</code>.</td></tr><tr><td><code>addrman.{h,cpp}</code></td><td>Peer address manager.</td></tr><tr><td><code>addrdb.cpp</code></td><td>Persists addrman to <code>peers.dat</code>.</td></tr><tr><td><code>bloom.cpp</code></td><td>Bloom filters for SPV.</td></tr><tr><td><code>protocol.{h,cpp}</code></td><td>Wire protocol constants.</td></tr><tr><td><code>httpserver.cpp</code>, <code>httprpc.cpp</code></td><td>HTTP layer for JSON-RPC and REST.</td></tr><tr><td><code>rest.cpp</code></td><td>REST endpoint.</td></tr><tr><td><code>torcontrol.cpp</code></td><td>Optional Tor hidden-service support.</td></tr><tr><td><code>sendalert.cpp</code></td><td>Legacy alert system.</td></tr></tbody></table>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="rpc">RPC<a href="#rpc" class="hash-link" aria-label="Direct link to RPC" title="Direct link to RPC" translate="no">​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>File</th><th>Role</th></tr></thead><tbody><tr><td><code>rpc/server.{h,cpp}</code></td><td>Dispatch table, auth, worker loop.</td></tr><tr><td><code>rpc/client.{h,cpp}</code></td><td>Client-side (used by <code>zcash-cli</code>).</td></tr><tr><td><code>rpc/protocol.{h,cpp}</code></td><td>JSON-RPC error codes.</td></tr><tr><td><code>rpc/blockchain.cpp</code></td><td><code>getblockchaininfo</code>, <code>getblock</code>, etc.</td></tr><tr><td><code>rpc/mining.cpp</code></td><td><code>getblocktemplate</code>, <code>submitblock</code>.</td></tr><tr><td><code>rpc/net.cpp</code></td><td><code>getpeerinfo</code>, <code>addnode</code>.</td></tr><tr><td><code>rpc/rawtransaction.cpp</code></td><td><code>decoderawtransaction</code>, <code>sendrawtransaction</code>.</td></tr><tr><td><code>rpc/misc.cpp</code></td><td>Everything else (e.g. <code>validateaddress</code>).</td></tr><tr><td><code>rpc/register.h</code></td><td>Registration of command tables.</td></tr></tbody></table>
+<p>Wallet RPCs are in <code>wallet/rpcwallet.cpp</code>, <code>wallet/rpcdump.cpp</code>,
+<code>wallet/rpcdisclosure.cpp</code>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="storage-and-serialisation">Storage and serialisation<a href="#storage-and-serialisation" class="hash-link" aria-label="Direct link to Storage and serialisation" title="Direct link to Storage and serialisation" translate="no">​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>File</th><th>Role</th></tr></thead><tbody><tr><td><code>dbwrapper.{h,cpp}</code></td><td>LevelDB C++ wrapper.</td></tr><tr><td><code>leveldb/</code></td><td>Vendored LevelDB.</td></tr><tr><td><code>crc32c/</code></td><td>Vendored CRC32C used by LevelDB.</td></tr><tr><td><code>streams.h</code>, <code>streams_rust.cpp</code></td><td>Serialisation streams and Rust bridges.</td></tr><tr><td><code>serialize.h</code></td><td>The Bitcoin-style <code>READWRITE</code> macros. Every consensus structure is serialised through these.</td></tr></tbody></table>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="utility-support">Utility, support<a href="#utility-support" class="hash-link" aria-label="Direct link to Utility, support" title="Direct link to Utility, support" translate="no">​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>File</th><th>Role</th></tr></thead><tbody><tr><td><code>util/system.{cpp,h}</code></td><td>Arg parsing, <code>gArgs</code>, daemonisation.</td></tr><tr><td><code>util/strencodings.{cpp,h}</code></td><td>Hex, base32/64.</td></tr><tr><td><code>util/moneystr.{cpp,h}</code></td><td>Money formatting.</td></tr><tr><td><code>util/time.{cpp,h}</code></td><td>Monotonic time, mock time for tests.</td></tr><tr><td><code>util/match.h</code></td><td><code>std::visit</code> helpers.</td></tr><tr><td><code>support/</code></td><td>Allocator, lockedpool, cleanse.</td></tr><tr><td><code>compat/</code></td><td>byteswap, endian, sanity.</td></tr><tr><td><code>crypto/</code></td><td>Hash functions; see chapter 06.</td></tr><tr><td><code>secp256k1/</code></td><td>Vendored libsecp256k1.</td></tr><tr><td><code>univalue/</code></td><td>Vendored UniValue (JSON for RPC).</td></tr><tr><td><code>random.{cpp,h}</code></td><td><code>GetRandBytes</code>, <code>FastRandomContext</code>.</td></tr><tr><td><code>sync.{cpp,h}</code></td><td>Mutex types, <code>LOCK</code> macros.</td></tr><tr><td><code>scheduler.{cpp,h}</code></td><td>Small task scheduler.</td></tr><tr><td><code>tinyformat.h</code></td><td>The <code>tfm::format</code> printf-alike.</td></tr><tr><td><code>uint256.{cpp,h}</code>, <code>uint252.h</code>, <code>arith_uint256.{cpp,h}</code></td><td>256-bit hash type and friends.</td></tr><tr><td><code>prevector.h</code></td><td>Small-buffer-optimised vector.</td></tr><tr><td><code>cuckoocache.h</code></td><td>Approximate set used by sigcache.</td></tr><tr><td><code>logging.{cpp,h}</code></td><td>C++ logger.</td></tr><tr><td><code>metrics.{cpp,h}</code></td><td>Prometheus metrics; exporter is in Rust.</td></tr><tr><td><code>clientversion.{cpp,h}</code></td><td>Version strings on the wire and in RPC.</td></tr></tbody></table>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="zcash-specific-subdirectories">Zcash-specific subdirectories<a href="#zcash-specific-subdirectories" class="hash-link" aria-label="Direct link to Zcash-specific subdirectories" title="Direct link to Zcash-specific subdirectories" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="srcconsensus"><code>src/consensus/</code><a href="#srcconsensus" class="hash-link" aria-label="Direct link to srcconsensus" title="Direct link to srcconsensus" translate="no">​</a></h4>
+<p>The consensus parameters and the network upgrade tables. Small, central.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">params.h               Consensus::Params, NetworkUpgrade, FundingStream</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">params.cpp             helpers on Params</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">upgrades.h, upgrades.cpp   NetworkUpgradeInfo[], CurrentEpochBranchId</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">funding.h, funding.cpp     FundingStreamInfo[]; ZIP-207/214</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">merkle.h, merkle.cpp       block transaction Merkle root, witness root</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">validation.h               CValidationState</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">consensus.h                MAX_BLOCK_SIZE, dust thresholds</span><br></div></code></pre></div></div>
+<p>The whole consensus parameter set:</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/consensus/params.h (Consensus::Params)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/consensus/params.h#L1-L100" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<p>Read these before reading <code>main.cpp</code>. They are the vocabulary
+<code>main.cpp</code> is written in.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="srczcash"><code>src/zcash/</code><a href="#srczcash" class="hash-link" aria-label="Direct link to srczcash" title="Direct link to srczcash" translate="no">​</a></h4>
+<p>C++ types and logic that are Zcash-specific but live on the C++ side
+rather than the Rust side (mostly historical: things written before
+librustzcash existed).</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">Address.{hpp,cpp}            address types, ReceiverIterator</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">Note.{hpp,cpp}               Sprout/Sapling note types (C++ side)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">NoteEncryption.{hpp,cpp}     Sprout note encryption</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">JoinSplit.{hpp,cpp}          Sprout JoinSplit logic</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">Proof.hpp                    BN254 group elements, Sprout proof wrappers</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">IncrementalMerkleTree.{hpp,cpp}  the C++ Merkle tree (still used by Sprout)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">History.{hpp,cpp}            ZIP-221 history MMR shims to Rust</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">cache.{h,cpp}                proof and signature caches</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">prf.{h,cpp}                  Sprout PRFs</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">util.{h,cpp}                 misc helpers</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">Zcash.h                      tiny umbrella header (network defaults)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">address/</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    sprout, sapling, orchard, transparent, unified  - one file per receiver kind</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    mnemonic                                          - BIP-39 mnemonic</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    zip32                                             - ZIP-32 HD keys</span><br></div></code></pre></div></div>
+<p>The naming is inconsistent (<code>.hpp</code> vs <code>.h</code>). Historical; not worth
+fixing now.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="srccrypto"><code>src/crypto/</code><a href="#srccrypto" class="hash-link" aria-label="Direct link to srccrypto" title="Direct link to srccrypto" translate="no">​</a></h4>
+<p>Symmetric primitives and hashes used directly by C++. Anything that
+the Rust side already provides is preferred to live in Rust.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">sha256.{h,cpp}, sha256_avx2.cpp, sha256_sse4.cpp, sha256_sse41.cpp, sha256_shani.cpp</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">sha512.{h,cpp}, sha1.{h,cpp}, ripemd160.{h,cpp}</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">hmac_sha256.{h,cpp}, hmac_sha512.{h,cpp}</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">chacha20.{h,cpp}</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">aes.{h,cpp}              wrapper around ctaes/</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">ctaes/                   constant-time AES</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">equihash.{h,cpp,tcc}     PoW; uses BLAKE2b from rust/blake2b.h</span><br></div></code></pre></div></div>
+<p>BLAKE2b lives on the Rust side (<code>src/rust/src/blake2b.rs</code>) and is
+consumed by C++ via cxx (see <code>src/rust/include/rust/blake2b.h</code>).</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="srcwallet"><code>src/wallet/</code><a href="#srcwallet" class="hash-link" aria-label="Direct link to srcwallet" title="Direct link to srcwallet" translate="no">​</a></h4>
+<p>The legacy wallet. Single-user, BDB-backed.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">wallet.{h,cpp}                 the CWallet class</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">walletdb.{h,cpp}               BDB-backed persistent storage</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">db.{h,cpp}                     BDB wrapper</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">crypter.{h,cpp}                wallet encryption (AES with passphrase-derived key)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">orchard.{h,cpp}                Orchard-specific wallet integration</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">memo.h                         Zcash memo field</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">paymentdisclosure*             ZIP-308 payment disclosure</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">rpcwallet.cpp, rpcdump.cpp, rpcdisclosure.cpp   wallet RPC commands</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">asyncrpcoperation_*.cpp        long-running operations</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">wallet_tx_builder.cpp          new transaction builder</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">test/, gtest/                  wallet-specific test suites</span><br></div></code></pre></div></div>
+<p>Most real-world bug reports land in the wallet.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="srcrust"><code>src/rust/</code><a href="#srcrust" class="hash-link" aria-label="Direct link to srcrust" title="Direct link to srcrust" translate="no">​</a></h4>
+<p>The Rust portion.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/Cargo*                 (driven from the top-level Cargo.toml)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/include/rust/          hand-written C headers for the extern &quot;C&quot; FFI</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/src/rustzcash.rs       main FFI module (extern &quot;C&quot; exports)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/src/bridge.rs          cxx-bridge declarations</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/src/*_ffi.rs           per-subsystem FFI shims</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/src/blake2b.rs         BLAKE2b helpers exposed to C++</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/src/sapling.rs         Sapling bundle assembly, batch validation</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/src/orchard_*.rs       Orchard bundle, FFI, batch validation</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/src/zcashd_orchard.rs  Orchard wallet glue</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/src/note_encryption.rs Sapling note decryption (batched)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/src/wallet_scanner.rs  trial-decryption pipeline</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/src/merkle_frontier.rs Orchard incremental tree state</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/src/bundlecache.rs     bundle-level validation cache</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/src/streams*.rs        binding C++ serialisation streams into Rust</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/src/tracing_ffi.rs     bridge from tracing(Rust) to logging(C++)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/src/metrics_ffi.rs     metrics(Rust) to Prometheus exporter</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/bin/inspect/main.rs    the zcash-inspect debug CLI</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/bin/wallet_tool.rs     the zcashd-wallet-tool migration helper</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/rust/tests/                 Rust-side tests (integration with C++ stubs)</span><br></div></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="srcpolicy"><code>src/policy/</code><a href="#srcpolicy" class="hash-link" aria-label="Direct link to srcpolicy" title="Direct link to srcpolicy" translate="no">​</a></h4>
+<p>Mempool acceptance policies above and beyond consensus. Fee policy,
+standard-transaction predicates.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="srcpow"><code>src/pow/</code><a href="#srcpow" class="hash-link" aria-label="Direct link to srcpow" title="Direct link to srcpow" translate="no">​</a></h4>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">pow/tromp/             vendored equihash solver (John Tromp&#x27;s)</span><br></div></code></pre></div></div>
+<p>Only built with <code>--enable-mining</code>. The verifier lives in
+<code>src/crypto/equihash.cpp</code>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="srczmq"><code>src/zmq/</code><a href="#srczmq" class="hash-link" aria-label="Direct link to srczmq" title="Direct link to srczmq" translate="no">​</a></h4>
+<p>ZMQ publisher for block/tx notifications. Off by default. Documented
+in <code>doc/zmq.md</code>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="srcfuzzing"><code>src/fuzzing/</code><a href="#srcfuzzing" class="hash-link" aria-label="Direct link to srcfuzzing" title="Direct link to srcfuzzing" translate="no">​</a></h4>
+<p>Fuzz targets. Built via the AFL/libFuzzer harnesses in <code>zcutil/afl/</code>
+and <code>zcutil/libfuzzer/</code>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="srcbench"><code>src/bench/</code><a href="#srcbench" class="hash-link" aria-label="Direct link to srcbench" title="Direct link to srcbench" translate="no">​</a></h4>
+<p>Microbenchmarks (<code>bench_bitcoin</code>).</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="srcgtest-and-srctest"><code>src/gtest/</code> and <code>src/test/</code><a href="#srcgtest-and-srctest" class="hash-link" aria-label="Direct link to srcgtest-and-srctest" title="Direct link to srcgtest-and-srctest" translate="no">​</a></h4>
+<p>Two parallel C++ unit-test suites; see <a class="" href="/zcashd/testing">chapter 09</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hot-files">Hot files<a href="#hot-files" class="hash-link" aria-label="Direct link to Hot files" title="Direct link to Hot files" translate="no">​</a></h2>
+<p>Most-changed files under <code>src/</code> on master in the last 2 years (more
+recent activity ranks higher). Use as a guide to where contributions
+actually land:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Count</th><th>File</th><th>What contributors usually change</th></tr></thead><tbody><tr><td>64</td><td><code>src/main.cpp</code></td><td>New per-NU validation rules, bug fixes in the validation pipeline</td></tr><tr><td>26</td><td><code>src/deprecation.h</code></td><td>Release-height bump per version</td></tr><tr><td>18</td><td><code>src/chainparams.cpp</code></td><td>Activation heights for new NUs, funding-stream updates</td></tr><tr><td>16</td><td><code>src/consensus/params.h</code></td><td>New consensus parameters per NU</td></tr><tr><td>15</td><td><code>src/clientversion.h</code></td><td>Per-release version string</td></tr><tr><td>13</td><td><code>src/consensus/params.cpp</code></td><td>Helpers on <code>Consensus::Params</code></td></tr><tr><td>10</td><td><code>src/rpc/mining.cpp</code></td><td><code>getblocktemplate</code> evolution</td></tr><tr><td>10</td><td><code>src/miner.cpp</code></td><td>Block template construction tweaks</td></tr><tr><td>10</td><td><code>src/gtest/test_validation.cpp</code></td><td>New tests pinned to new rules</td></tr></tbody></table>
+<p>If a candidate PR does not touch one of these files and is not in
+<code>src/rust/</code>, the contributor should pause and check that the change
+is in the right place. Most fixes converge here.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-failure-modes">4. Failure modes<a href="#4-failure-modes" class="hash-link" aria-label="Direct link to 4. Failure modes" title="Direct link to 4. Failure modes" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Editing <code>main.cpp</code> without reading the relevant <code>Check*</code>
+function.</strong> The validation pipeline is brittle; insertions in the
+middle break ordering assumptions. Caught by <code>src/gtest/test_*.cpp</code>
+if a test exists for the rule.</li>
+<li class=""><strong>Adding files to <code>src/zcash/</code> that should be in <code>src/rust/</code>.</strong> New
+cryptography belongs on the Rust side. Caught only by code review.</li>
+<li class=""><strong>Mixing <code>.h</code> and <code>.hpp</code> for the same module.</strong> The codebase is
+inconsistent; pick the convention of the surrounding file.</li>
+<li class=""><strong>Bypassing <code>serialize.h</code>.</strong> Any consensus-relevant byte format
+must go through <code>READWRITE</code> so that the hash code, network code, and
+disk code all agree.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-spec-pointers">5. Spec pointers<a href="#5-spec-pointers" class="hash-link" aria-label="Direct link to 5. Spec pointers" title="Direct link to 5. Spec pointers" translate="no">​</a></h2>
+<ul>
+<li class=""><a href="https://zips.z.cash/protocol/protocol.pdf" target="_blank" rel="noopener noreferrer" class="">Spec section 7 (Consensus changes)</a>:
+the section list mirrors what <code>src/consensus/</code> enforces.</li>
+<li class=""><a href="https://github.com/bitcoin/bitcoin/tree/master/doc" target="_blank" rel="noopener noreferrer" class="">Bitcoin Core developer docs</a>:
+for any file that does not look Zcash-specific.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="6-exercises">6. Exercises<a href="#6-exercises" class="hash-link" aria-label="Direct link to 6. Exercises" title="Direct link to 6. Exercises" translate="no">​</a></h2>
+<ol>
+<li class="">
+<p><strong>Subsystem ownership.</strong> Pick one source file at random and
+determine which subsystem it belongs to using the tables in
+section 3. If it is none of them, that is a finding worth raising.</p>
+</li>
+<li class="">
+<p><strong>Cross-language search.</strong> Grep for one <code>librustzcash_*</code> function
+that appears in both
+<a href="https://github.com/zcash/zcash/tree/v5.5.0-rc1/src/rust/include/rust" target="_blank" rel="noopener noreferrer" class="">src/rust/include/rust/</a>
+and a <code>.cpp</code> file. Identify both ends and the FFI signature.</p>
+</li>
+<li class="">
+<p><strong>Build an LSP setup.</strong> Generate a <code>compile_commands.json</code> (with
+<code>bear -- ./zcutil/build.sh</code>) and confirm clangd can jump from a
+<code>ContextualCheckTransaction</code> call site in <code>main.cpp</code> to the
+definition.</p>
+</li>
+<li class="">
+<p><strong>Modification exercise.</strong> Add a TRACE-level log line in
+<code>validationinterface.cpp</code> that fires every time <code>BlockChecked</code> is
+invoked. Confirm it appears under <code>-debug=mempool</code> against
+regtest.</p>
+</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="7-further-reading">7. Further reading<a href="#7-further-reading" class="hash-link" aria-label="Direct link to 7. Further reading" title="Direct link to 7. Further reading" translate="no">​</a></h2>
+<ul>
+<li class="">The Bitcoin Core
+<a href="https://github.com/bitcoin/bitcoin/blob/master/doc/developer-notes.md" target="_blank" rel="noopener noreferrer" class="">doc/developer-notes.md</a>
+for the inherited code style.</li>
+<li class="">The first 200 lines of
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/init.cpp" target="_blank" rel="noopener noreferrer" class="">src/init.cpp</a>.
+A startup walk-through.</li>
+</ul></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/dannywillems/zcashd/edit/onboarding/onboarding/docs/03-code-organization.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/zcashd/build-system"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Build system and contribution loop</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/zcashd/consensus"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Consensus</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#1-why-this-chapter-exists" class="table-of-contents__link toc-highlight">1. Why this chapter exists</a></li><li><a href="#2-definitions" class="table-of-contents__link toc-highlight">2. Definitions</a></li><li><a href="#3-the-code" class="table-of-contents__link toc-highlight">3. The code</a><ul><li><a href="#top-level-layout" class="table-of-contents__link toc-highlight">Top-level layout</a></li><li><a href="#entry-points" class="table-of-contents__link toc-highlight">Entry points</a></li><li><a href="#chain-blocks-transactions" class="table-of-contents__link toc-highlight">Chain, blocks, transactions</a></li><li><a href="#transactions-scripts-addresses" class="table-of-contents__link toc-highlight">Transactions, scripts, addresses</a></li><li><a href="#p2p" class="table-of-contents__link toc-highlight">P2P</a></li><li><a href="#rpc" class="table-of-contents__link toc-highlight">RPC</a></li><li><a href="#storage-and-serialisation" class="table-of-contents__link toc-highlight">Storage and serialisation</a></li><li><a href="#utility-support" class="table-of-contents__link toc-highlight">Utility, support</a></li><li><a href="#zcash-specific-subdirectories" class="table-of-contents__link toc-highlight">Zcash-specific subdirectories</a></li></ul></li><li><a href="#hot-files" class="table-of-contents__link toc-highlight">Hot files</a></li><li><a href="#4-failure-modes" class="table-of-contents__link toc-highlight">4. Failure modes</a></li><li><a href="#5-spec-pointers" class="table-of-contents__link toc-highlight">5. Spec pointers</a></li><li><a href="#6-exercises" class="table-of-contents__link toc-highlight">6. Exercises</a></li><li><a href="#7-further-reading" class="table-of-contents__link toc-highlight">7. Further reading</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">This course</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/dannywillems/zcashd/tree/onboarding/onboarding" target="_blank" rel="noopener noreferrer" class="footer__link-item">Source on GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/dannywillems/zcashd/issues" target="_blank" rel="noopener noreferrer" class="footer__link-item">Open an issue<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Upstream</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/zcash/zcash" target="_blank" rel="noopener noreferrer" class="footer__link-item">zcash/zcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/zcash/zcash/tree/v5.5.0-rc1" target="_blank" rel="noopener noreferrer" class="footer__link-item">Pinned tag: v5.5.0-rc1<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/zcash/librustzcash" target="_blank" rel="noopener noreferrer" class="footer__link-item">librustzcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Authoritative references</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://zips.z.cash/protocol/protocol.pdf" target="_blank" rel="noopener noreferrer" class="footer__link-item">Zcash Protocol Specification<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zips.z.cash/" target="_blank" rel="noopener noreferrer" class="footer__link-item">ZIPs index<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zcash.github.io/halo2/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Halo 2 book<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zcash.github.io/orchard/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Orchard book<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">zcashd onboarding course. Source pinned at v5.5.0-rc1.</div></div></div></footer></div>
+</body>
+</html>

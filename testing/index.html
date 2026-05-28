@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-testing" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.10.1">
+<title data-rh="true">Testing | zcashd onboarding</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://dannywillems.github.io/zcashd/testing"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Testing | zcashd onboarding"><meta data-rh="true" name="description" content="Five test layers (Rust unit, Boost.Test, GoogleTest, wallet tests, Python RPC integration), benchmarks, fuzzing, and cross-implementation differential testing."><meta data-rh="true" property="og:description" content="Five test layers (Rust unit, Boost.Test, GoogleTest, wallet tests, Python RPC integration), benchmarks, fuzzing, and cross-implementation differential testing."><link data-rh="true" rel="icon" href="/zcashd/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://dannywillems.github.io/zcashd/testing"><link data-rh="true" rel="alternate" href="https://dannywillems.github.io/zcashd/testing" hreflang="en"><link data-rh="true" rel="alternate" href="https://dannywillems.github.io/zcashd/testing" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Testing","item":"https://dannywillems.github.io/zcashd/testing"}]}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5EGIE6RDQE0etf4GvjBR1bkf4pcUk2TprLGa0k7/rJkRnCu6WSt6" crossorigin="anonymous"><link rel="stylesheet" href="/zcashd/assets/css/styles.bddee692.css">
+<script src="/zcashd/assets/js/runtime~main.7431a545.js" defer="defer"></script>
+<script src="/zcashd/assets/js/main.0beba01f.js" defer="defer"></script>
+</head>
+<body>
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{const n=new URLSearchParams(window.location.search).entries();for(var[t,e]of n)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}(),document.documentElement.setAttribute("data-announcement-bar-initially-dismissed",function(){try{return"true"===localStorage.getItem("docusaurus.announcement.dismiss")}catch(t){}return!1}())</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><div class="theme-announcement-bar announcementBar_mb4j" style="background-color:#fef3c7;color:#78350f" role="banner"><div class="content_knG7 announcementBarContent_xLdY">This site is automatically generated using Claude Code. Errors may have been introduced. The code is the law, always refer to the source in the <a href="https://github.com/zcash/librustzcash">librustzcash workspace</a>.</div></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/zcashd/"><b class="navbar__title text--truncate">zcashd onboarding</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/zcashd/">Course</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><a href="https://github.com/dannywillems/zcashd/tree/onboarding/onboarding" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Source<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><a href="https://github.com/zcash/zcash" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">zcash/zcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"><div class="navbar__search searchBarContainer_NW3z" dir="ltr"><input placeholder="Search" aria-label="Search" class="navbar__search-input searchInput_YFbd" value=""><div class="loadingRing_RJI3 searchBarLoadingRing_YnHq"><div></div><div></div><div></div><div></div></div></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG menuWithAnnouncementBar_GW3s"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/"><span title="Home" class="linkLabel_WmDU">Home</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/context-and-history"><span title="Context and history" class="linkLabel_WmDU">Context and history</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/build-system"><span title="Build system and contribution loop" class="linkLabel_WmDU">Build system and contribution loop</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/code-organization"><span title="Code organization" class="linkLabel_WmDU">Code organization</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/consensus"><span title="Consensus" class="linkLabel_WmDU">Consensus</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/p2p-networking"><span title="P2P networking" class="linkLabel_WmDU">P2P networking</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/cryptography"><span title="Cryptography (non-ZK)" class="linkLabel_WmDU">Cryptography (non-ZK)</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/zk-proofs-and-pools"><span title="zk-SNARKs and shielded pools" class="linkLabel_WmDU">zk-SNARKs and shielded pools</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/wallet-and-rpc"><span title="Wallet and RPC" class="linkLabel_WmDU">Wallet and RPC</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" href="/zcashd/testing"><span title="Testing" class="linkLabel_WmDU">Testing</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/reading-plan"><span title="Reading plan: six weeks" class="linkLabel_WmDU">Reading plan: six weeks</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/glossary"><span title="Glossary" class="linkLabel_WmDU">Glossary</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/external-references"><span title="External references" class="linkLabel_WmDU">External references</span></a></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/zcashd/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">Testing</span></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Testing</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-why-this-chapter-exists">1. Why this chapter exists<a href="#1-why-this-chapter-exists" class="hash-link" aria-label="Direct link to 1. Why this chapter exists" title="Direct link to 1. Why this chapter exists" translate="no">​</a></h2>
+<p>There are five test layers in this repo. Knowing which to use is part
+of being productive: a Python RPC test takes 30+ seconds of bring-up
+overhead per run, a gtest takes a few seconds, and a Rust unit test
+takes a few hundred milliseconds. Choosing wrong burns hours.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-definitions">2. Definitions<a href="#2-definitions" class="hash-link" aria-label="Direct link to 2. Definitions" title="Direct link to 2. Definitions" translate="no">​</a></h2>
+<p><strong>Definition 9.1 (Test layer).</strong> A coherent group of tests sharing a
+test framework, a build target, and a runner. The five layers in
+zcashd are Rust unit, Boost.Test, GoogleTest, wallet tests, and
+Python RPC.</p>
+<p><strong>Definition 9.2 (Regtest).</strong> A private regression-test network with
+a near-zero proof-of-work target. Activations are configurable via
+<code>-nuparams=</code> at startup. Used by Python RPC tests for end-to-end
+behaviour.</p>
+<p><strong>Definition 9.3 (Differential testing).</strong> Running two implementations
+(zcashd and zebra) against the same chain and comparing the per-block
+state. Used for the highest-confidence consensus checks.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-the-code">3. The code<a href="#3-the-code" class="hash-link" aria-label="Direct link to 3. The code" title="Direct link to 3. The code" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-five-layers">The five layers<a href="#the-five-layers" class="hash-link" aria-label="Direct link to The five layers" title="Direct link to The five layers" translate="no">​</a></h3>
+<ol>
+<li class=""><strong>Rust unit tests</strong> under <code>src/rust/src/</code> and the upstream
+<code>librustzcash</code> crates. Run with <code>cargo test</code>.</li>
+<li class=""><strong>C++ Bitcoin-Core inherited unit tests</strong> under <code>src/test/</code>, using
+Boost.Test. Built as <code>test_bitcoin</code>. Run with <code>make -C src check</code>
+or <code>src/test/test_bitcoin --run_test=foo_tests</code>.</li>
+<li class=""><strong>C++ Zcash unit tests</strong> under <code>src/gtest/</code>, using GoogleTest.
+Built as <code>zcash-gtest</code>. Run with <code>src/zcash-gtest</code> (optional
+<code>--gtest_filter=...</code>).</li>
+<li class=""><strong>C++ wallet tests</strong> under <code>src/wallet/test/</code> and
+<code>src/wallet/gtest/</code>, two suites mirroring the split above.</li>
+<li class=""><strong>Python RPC integration tests</strong> under <code>qa/rpc-tests/</code>, run with
+<code>qa/pull-tester/rpc-tests.py [test_name]</code>.</li>
+</ol>
+<p>The full suite runner is
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/qa/zcash/full_test_suite.py" target="_blank" rel="noopener noreferrer" class="">qa/zcash/full_test_suite.py</a>,
+which runs all five layers in sequence. CI runs this.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="when-to-use-which-layer">When to use which layer<a href="#when-to-use-which-layer" class="hash-link" aria-label="Direct link to When to use which layer" title="Direct link to When to use which layer" translate="no">​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Want to test...</th><th>Use</th></tr></thead><tbody><tr><td>A cryptographic primitive in isolation</td><td>Rust unit test in the relevant crate</td></tr><tr><td>Encoding/decoding logic</td><td>Rust unit test or C++ gtest</td></tr><tr><td><code>CheckTransaction</code> semantics</td><td><code>src/gtest/test_checktransaction.cpp</code></td></tr><tr><td>A new consensus rule at a specific height</td><td><code>src/gtest/test_consensus.cpp</code> plus an RPC test</td></tr><tr><td>End-to-end wallet behaviour</td><td>RPC test in <code>qa/rpc-tests/</code></td></tr><tr><td>Behaviour across multiple nodes (reorgs, partition)</td><td>RPC test using <code>TestFramework</code></td></tr><tr><td>Mempool corner cases</td><td>both unit and RPC</td></tr><tr><td>Bitcoin-script edge cases</td><td><code>src/test/script_*_tests.cpp</code></td></tr></tbody></table>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="c-unit-tests-in-srctest-boosttest">C++ unit tests in src/test/ (Boost.Test)<a href="#c-unit-tests-in-srctest-boosttest" class="hash-link" aria-label="Direct link to C++ unit tests in src/test/ (Boost.Test)" title="Direct link to C++ unit tests in src/test/ (Boost.Test)" translate="no">​</a></h3>
+<p>Inherited from Bitcoin Core 0.12. Each file is a
+<code>BOOST_FIXTURE_TEST_SUITE</code> containing <code>BOOST_AUTO_TEST_CASE</code>
+definitions.</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/test/test_bitcoin.h (fixture base classes)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/test/test_bitcoin.h#L1-L80" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<p>Fixtures:</p>
+<ul>
+<li class=""><code>BasicTestingSetup</code> (init args, ECC, chain params).</li>
+<li class=""><code>TestingSetup</code> (also creates a regtest scratch directory,
+validation state, mempool).</li>
+<li class=""><code>TestChain100Setup</code> (creates a 100-block chain so coinbase is
+mature).</li>
+</ul>
+<p>Useful files to learn from:
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/test/script_P2SH_tests.cpp" target="_blank" rel="noopener noreferrer" class="">script_P2SH_tests.cpp</a>,
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/test/coins_tests.cpp" target="_blank" rel="noopener noreferrer" class="">coins_tests.cpp</a>,
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/test/mempool_tests.cpp" target="_blank" rel="noopener noreferrer" class="">mempool_tests.cpp</a>,
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/test/DoS_tests.cpp" target="_blank" rel="noopener noreferrer" class="">DoS_tests.cpp</a>.</p>
+<p>Run:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token function" style="color:#d73a49">make</span><span class="token plain"> </span><span class="token parameter variable" style="color:#36acaa">-C</span><span class="token plain"> src check</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/test/test_bitcoin </span><span class="token parameter variable" style="color:#36acaa">--run_test</span><span class="token operator" style="color:#393A34">=</span><span class="token plain">mempool_tests</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/test/test_bitcoin </span><span class="token parameter variable" style="color:#36acaa">--log_level</span><span class="token operator" style="color:#393A34">=</span><span class="token plain">test_suite </span><span class="token parameter variable" style="color:#36acaa">--run_test</span><span class="token operator" style="color:#393A34">=</span><span class="token plain">DoS_tests</span><br></div></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="c-unit-tests-in-srcgtest-googletest">C++ unit tests in src/gtest/ (GoogleTest)<a href="#c-unit-tests-in-srcgtest-googletest" class="hash-link" aria-label="Direct link to C++ unit tests in src/gtest/ (GoogleTest)" title="Direct link to C++ unit tests in src/gtest/ (GoogleTest)" translate="no">​</a></h3>
+<p>Zcash-added tests. They use GoogleTest and have larger fixtures
+because they exercise the full chain state, including shielded pools.</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/gtest/test_checktransaction.cpp (a representative gtest)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_checktransaction.cpp#L1-L80" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<p>Important files:</p>
+<ul>
+<li class=""><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_consensus.cpp" target="_blank" rel="noopener noreferrer" class="">test_consensus.cpp</a>:
+branch ID, activation height logic.</li>
+<li class=""><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_checkblock.cpp" target="_blank" rel="noopener noreferrer" class="">test_checkblock.cpp</a>,
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_checktransaction.cpp" target="_blank" rel="noopener noreferrer" class="">test_checktransaction.cpp</a>:
+the validation predicates.</li>
+<li class=""><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_joinsplit.cpp" target="_blank" rel="noopener noreferrer" class="">test_joinsplit.cpp</a>,
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_noteencryption.cpp" target="_blank" rel="noopener noreferrer" class="">test_noteencryption.cpp</a>,
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_pedersen_hash.cpp" target="_blank" rel="noopener noreferrer" class="">test_pedersen_hash.cpp</a>:
+crypto.</li>
+<li class=""><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_miner.cpp" target="_blank" rel="noopener noreferrer" class="">test_miner.cpp</a>:
+block template construction.</li>
+<li class=""><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_foundersreward.cpp" target="_blank" rel="noopener noreferrer" class="">test_foundersreward.cpp</a>,
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_keys.cpp" target="_blank" rel="noopener noreferrer" class="">test_keys.cpp</a>,
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_keystore.cpp" target="_blank" rel="noopener noreferrer" class="">test_keystore.cpp</a>:
+wallet-adjacent.</li>
+<li class=""><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_history.cpp" target="_blank" rel="noopener noreferrer" class="">test_history.cpp</a>:
+ZIP-221 history tree.</li>
+<li class=""><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_mempool.cpp" target="_blank" rel="noopener noreferrer" class="">test_mempool.cpp</a>,
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_mempoollimit.cpp" target="_blank" rel="noopener noreferrer" class="">test_mempoollimit.cpp</a>:
+mempool.</li>
+<li class=""><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_pow.cpp" target="_blank" rel="noopener noreferrer" class="">test_pow.cpp</a>:
+difficulty.</li>
+<li class=""><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/gtest/test_validation.cpp" target="_blank" rel="noopener noreferrer" class="">test_validation.cpp</a>:
+the validation pipeline; one of the top-10 hot files in the repo.</li>
+</ul>
+<p>Run:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">src/zcash-gtest                                  </span><span class="token comment" style="color:#999988;font-style:italic"># all tests</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/zcash-gtest </span><span class="token parameter variable" style="color:#36acaa">--gtest_filter</span><span class="token operator" style="color:#393A34">=</span><span class="token plain">ConsensusTest.*   </span><span class="token comment" style="color:#999988;font-style:italic"># one test class</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/zcash-gtest </span><span class="token parameter variable" style="color:#36acaa">--gtest_filter</span><span class="token operator" style="color:#393A34">=</span><span class="token plain">*Sapling*         </span><span class="token comment" style="color:#999988;font-style:italic"># by name pattern</span><br></div></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="rpc-tests-in-qarpc-tests">RPC tests in qa/rpc-tests/<a href="#rpc-tests-in-qarpc-tests" class="hash-link" aria-label="Direct link to RPC tests in qa/rpc-tests/" title="Direct link to RPC tests in qa/rpc-tests/" translate="no">​</a></h3>
+<p>Each <code>.py</code> file is one test. The harness <code>framework.py</code> provides a
+<code>BitcoinTestFramework</code> base class that:</p>
+<ul>
+<li class="">Starts N (typically 4) regtest nodes on local ports.</li>
+<li class="">Optionally connects them.</li>
+<li class="">Provides RPC clients (<code>nodes[i]</code>).</li>
+<li class="">Tears down on exit.</li>
+</ul>
+<div class="docusaurus-theme-github-codeblock"><div class="language-python codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">qa/rpc-tests/test_framework/test_framework.py (BitcoinTestFramework)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-python codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/qa/rpc-tests/test_framework/test_framework.py#L1-L80" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<p>Skeleton:</p>
+<div class="language-python codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-python codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">from</span><span class="token plain"> test_framework</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">test_framework </span><span class="token keyword" style="color:#00009f">import</span><span class="token plain"> BitcoinTestFramework</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">from</span><span class="token plain"> test_framework</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">util </span><span class="token keyword" style="color:#00009f">import</span><span class="token plain"> assert_equal</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token class-name">MyTest</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">BitcoinTestFramework</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">def</span><span class="token plain"> </span><span class="token function" style="color:#d73a49">setup_chain</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">self</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token builtin">super</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">setup_chain</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">def</span><span class="token plain"> </span><span class="token function" style="color:#d73a49">run_test</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">self</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">        self</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">nodes</span><span class="token punctuation" style="color:#393A34">[</span><span class="token number" style="color:#36acaa">0</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">generate</span><span class="token punctuation" style="color:#393A34">(</span><span class="token number" style="color:#36acaa">100</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">        self</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">sync_all</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">        addr </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> self</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">nodes</span><span class="token punctuation" style="color:#393A34">[</span><span class="token number" style="color:#36acaa">0</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">getnewaddress</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">        assert_equal</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">self</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">nodes</span><span class="token punctuation" style="color:#393A34">[</span><span class="token number" style="color:#36acaa">0</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">getbalance</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> expected</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">if</span><span class="token plain"> __name__ </span><span class="token operator" style="color:#393A34">==</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;__main__&#x27;</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    MyTest</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">main</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><br></div></code></pre></div></div>
+<p>Run a single test:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">qa/pull-tester/rpc-tests.py mempool_nu_activation.py</span><br></div></code></pre></div></div>
+<p>Run the whole suite (slow):</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">qa/pull-tester/rpc-tests.py</span><br></div></code></pre></div></div>
+<p>Tests are split into &quot;passing&quot; lists in <code>qa/pull-tester/rpc-tests.py</code>;
+add new tests to the appropriate list there.</p>
+<p>Key gotchas:</p>
+<ul>
+<li class="">Regtest mining is fast (low PoW) but generation is still
+synchronous; use <code>generate(N)</code> rather than spinning.</li>
+<li class=""><code>sync_all()</code> blocks until all nodes share the same tip.</li>
+<li class="">Activation heights on regtest are 1 by default for most NUs (so all
+rules are active). To test pre-activation logic, pass
+<code>-nuparams=branchid:height</code> to the nodes.</li>
+<li class="">The framework uses a pool of pre-mined blocks
+(<code>qa/rpc-tests/cache/</code>) to skip the slow initial generation; this
+cache is regenerated by <code>qa/rpc-tests/create_cache.py</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="rust-tests">Rust tests<a href="#rust-tests" class="hash-link" aria-label="Direct link to Rust tests" title="Direct link to Rust tests" translate="no">​</a></h3>
+<p>Run from the repo root:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token function" style="color:#d73a49">cargo</span><span class="token plain"> </span><span class="token builtin class-name">test</span><span class="token plain">                              </span><span class="token comment" style="color:#999988;font-style:italic"># in-repo crate tests</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token function" style="color:#d73a49">cargo</span><span class="token plain"> </span><span class="token builtin class-name">test</span><span class="token plain"> --manifest-path src/rust/Cargo.toml -- some::module::tests</span><br></div></code></pre></div></div>
+<p>Tests live alongside source as <code>#[cfg(test)] mod tests { ... }</code>
+blocks and under <code>src/rust/tests/</code>. For upstream <code>librustzcash</code>
+crates, clone that repo and run its own test suite; many
+cryptographic invariants are tested there, not here.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="benchmarks">Benchmarks<a href="#benchmarks" class="hash-link" aria-label="Direct link to Benchmarks" title="Direct link to Benchmarks" translate="no">​</a></h3>
+<p><code>src/bench/</code> (built as <code>bench_bitcoin</code>) contains microbenchmarks for
+hashes, signature verification, mempool insertion, coin selection,
+etc.</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/bench/bench.h (benchmark framework)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/bench/bench.h#L1-L60" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<p>Run:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">src/bench/bench_bitcoin</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/bench/bench_bitcoin </span><span class="token parameter variable" style="color:#36acaa">-filter</span><span class="token operator" style="color:#393A34">=</span><span class="token plain">Sapling*</span><br></div></code></pre></div></div>
+<p>Use for performance regression checks before merging.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="fuzzing">Fuzzing<a href="#fuzzing" class="hash-link" aria-label="Direct link to Fuzzing" title="Direct link to Fuzzing" translate="no">​</a></h3>
+<p><code>src/fuzzing/</code> contains fuzz targets. Two drivers:</p>
+<ul>
+<li class="">AFL (<code>zcutil/afl/</code>) for traditional coverage-guided fuzzing.</li>
+<li class="">libFuzzer (<code>zcutil/libfuzzer/</code>) for in-process fuzzing with
+Clang/sanitizers.</li>
+</ul>
+<p>Both run against the same harnesses. Active targets: deserialisation
+of blocks, transactions, scripts, addresses. The fuzzers are not run
+in CI by default; ZODL should put them on a regular schedule.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="cross-implementation-differential-testing">Cross-implementation differential testing<a href="#cross-implementation-differential-testing" class="hash-link" aria-label="Direct link to Cross-implementation differential testing" title="Direct link to Cross-implementation differential testing" translate="no">​</a></h3>
+<p>For consensus, the strongest test is &quot;do zcashd and zebra agree on
+every block from genesis to tip?&quot;. ECC historically ran this as a
+one-off check before releases. The mechanism is to point both nodes
+at the same testnet/mainnet and diff their
+<code>getblockchaininfo</code>/<code>getblock</code> outputs per block. The Zcash
+Foundation has tooling for this; coordinate with them before
+releasing a consensus-affecting change.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-ci-runs">What CI runs<a href="#what-ci-runs" class="hash-link" aria-label="Direct link to What CI runs" title="Direct link to What CI runs" translate="no">​</a></h3>
+<p><a href="https://github.com/zcash/zcash/tree/v5.5.0-rc1/.github/workflows" target="_blank" rel="noopener noreferrer" class="">.github/workflows/</a>
+contains the GitHub Actions definitions. Roughly:</p>
+<ul>
+<li class=""><code>audits.yml</code>: cargo-vet and supply-chain checks.</li>
+<li class=""><code>book.yml</code>: builds the ECC user book.</li>
+<li class=""><code>checks.yml</code>: build on Debian/Ubuntu, with all the depends;
+<code>test_bitcoin</code>, <code>zcash-gtest</code>, the RPC test suite; Rust tests via
+<code>cargo test</code>.</li>
+<li class=""><code>lints.yml</code>: lint of source files (whitespace, header guards).</li>
+</ul>
+<p>CI does NOT run fuzzers, does NOT run benchmarks, does NOT run
+cross-implementation diff tests. Plan to backfill these on a periodic
+schedule (nightly, weekly).</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="debugging-tests">Debugging tests<a href="#debugging-tests" class="hash-link" aria-label="Direct link to Debugging tests" title="Direct link to Debugging tests" translate="no">​</a></h3>
+<p>For a flaky RPC test, the most useful flag is:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">qa/pull-tester/rpc-tests.py </span><span class="token parameter variable" style="color:#36acaa">--nocleanup</span><span class="token plain"> mempool_nu_activation.py</span><br></div></code></pre></div></div>
+<p><code>--nocleanup</code> leaves the per-test data directories under
+<code>/tmp/test...</code> so they can be inspected (<code>debug.log</code>, <code>wallet.dat</code>,
+etc.).</p>
+<p>For a failing gtest, run with <code>--gtest_break_on_failure</code> under <code>gdb</code>
+to drop into the debugger at the assertion site.</p>
+<p>For a Rust failure, <code>RUST_BACKTRACE=1 cargo test --release</code> and read
+the panic location.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-failure-modes">4. Failure modes<a href="#4-failure-modes" class="hash-link" aria-label="Direct link to 4. Failure modes" title="Direct link to 4. Failure modes" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Adding a new RPC test without listing it in
+<code>qa/pull-tester/rpc-tests.py</code>.</strong> The test is never run by CI.
+Caught by review only.</li>
+<li class=""><strong>Forgetting <code>-nuparams=</code> for pre-activation regression tests.</strong>
+All NUs are active on regtest by default, so the regression is
+silently skipped. Caught by careful reading of the test.</li>
+<li class=""><strong>Relying on absolute paths in tests.</strong> Breaks the test cache and
+parallel runs. Caught by the RPC harness when paths conflict.</li>
+<li class=""><strong>Flake from <code>sync_all()</code> timing.</strong> Increase the timeout; do not
+assume; rerunning is not a fix. Caught by repeated CI failure.</li>
+<li class=""><strong>gtest fixture leak.</strong> A fixture that allocates outside its
+destructor leaves state for the next test. Caught only by running
+the suite in random order.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-spec-pointers">5. Spec pointers<a href="#5-spec-pointers" class="hash-link" aria-label="Direct link to 5. Spec pointers" title="Direct link to 5. Spec pointers" translate="no">​</a></h2>
+<p>The test layout is not specified by the protocol; it is internal
+convention. Relevant external references:</p>
+<ul>
+<li class=""><a href="https://google.github.io/googletest/primer.html" target="_blank" rel="noopener noreferrer" class="">Google Test primer</a>.</li>
+<li class=""><a href="https://www.boost.org/doc/libs/release/libs/test/doc/html/index.html" target="_blank" rel="noopener noreferrer" class="">Boost.Test docs</a>.</li>
+<li class=""><a href="https://github.com/bitcoin/bitcoin/tree/master/test" target="_blank" rel="noopener noreferrer" class="">Bitcoin Core test framework docs</a>.</li>
+<li class=""><a href="https://aflplus.plus/" target="_blank" rel="noopener noreferrer" class="">AFL docs</a>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="6-exercises">6. Exercises<a href="#6-exercises" class="hash-link" aria-label="Direct link to 6. Exercises" title="Direct link to 6. Exercises" translate="no">​</a></h2>
+<ol>
+<li class="">
+<p><strong>Run one of every layer.</strong> Execute one
+<code>cargo test</code>, one <code>boost.test</code> (run a single suite), one
+<code>zcash-gtest --gtest_filter</code>, and one RPC test. Time each.</p>
+</li>
+<li class="">
+<p><strong>Spot a missing test.</strong> Find a <code>Misbehaving(...)</code> call in
+<code>src/main.cpp</code> for which there is no corresponding test in
+<code>src/test/DoS_tests.cpp</code>. Open an issue (or write the test).</p>
+</li>
+<li class="">
+<p><strong>Add a regression.</strong> Pick the most recent merged consensus PR
+from <code>git log src/main.cpp</code>; identify whether it added a test;
+if not, write one.</p>
+</li>
+<li class="">
+<p><strong>Modification exercise.</strong> Add a <code>--bench-zk</code> mode to
+<code>bench_bitcoin</code> that runs the Sapling spend verifier on a
+prepared test vector and reports verification time. Use it to
+compare batched vs unbatched cost on a 10-spend bundle.</p>
+</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="7-further-reading">7. Further reading<a href="#7-further-reading" class="hash-link" aria-label="Direct link to 7. Further reading" title="Direct link to 7. Further reading" translate="no">​</a></h2>
+<ul>
+<li class="">The Bitcoin Core
+<a href="https://github.com/bitcoin/bitcoin/blob/master/test/README.md" target="_blank" rel="noopener noreferrer" class="">test/README.md</a>
+for the inherited Python test framework design.</li>
+<li class="">The
+<a href="https://github.com/proptest-rs/proptest" target="_blank" rel="noopener noreferrer" class=""><code>proptest</code> Rust crate</a>
+for property-based tests; consider for new consensus primitives.</li>
+</ul></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/dannywillems/zcashd/edit/onboarding/onboarding/docs/09-testing.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/zcashd/wallet-and-rpc"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Wallet and RPC</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/zcashd/reading-plan"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Reading plan: six weeks</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#1-why-this-chapter-exists" class="table-of-contents__link toc-highlight">1. Why this chapter exists</a></li><li><a href="#2-definitions" class="table-of-contents__link toc-highlight">2. Definitions</a></li><li><a href="#3-the-code" class="table-of-contents__link toc-highlight">3. The code</a><ul><li><a href="#the-five-layers" class="table-of-contents__link toc-highlight">The five layers</a></li><li><a href="#when-to-use-which-layer" class="table-of-contents__link toc-highlight">When to use which layer</a></li><li><a href="#c-unit-tests-in-srctest-boosttest" class="table-of-contents__link toc-highlight">C++ unit tests in src/test/ (Boost.Test)</a></li><li><a href="#c-unit-tests-in-srcgtest-googletest" class="table-of-contents__link toc-highlight">C++ unit tests in src/gtest/ (GoogleTest)</a></li><li><a href="#rpc-tests-in-qarpc-tests" class="table-of-contents__link toc-highlight">RPC tests in qa/rpc-tests/</a></li><li><a href="#rust-tests" class="table-of-contents__link toc-highlight">Rust tests</a></li><li><a href="#benchmarks" class="table-of-contents__link toc-highlight">Benchmarks</a></li><li><a href="#fuzzing" class="table-of-contents__link toc-highlight">Fuzzing</a></li><li><a href="#cross-implementation-differential-testing" class="table-of-contents__link toc-highlight">Cross-implementation differential testing</a></li><li><a href="#what-ci-runs" class="table-of-contents__link toc-highlight">What CI runs</a></li><li><a href="#debugging-tests" class="table-of-contents__link toc-highlight">Debugging tests</a></li></ul></li><li><a href="#4-failure-modes" class="table-of-contents__link toc-highlight">4. Failure modes</a></li><li><a href="#5-spec-pointers" class="table-of-contents__link toc-highlight">5. Spec pointers</a></li><li><a href="#6-exercises" class="table-of-contents__link toc-highlight">6. Exercises</a></li><li><a href="#7-further-reading" class="table-of-contents__link toc-highlight">7. Further reading</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">This course</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/dannywillems/zcashd/tree/onboarding/onboarding" target="_blank" rel="noopener noreferrer" class="footer__link-item">Source on GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/dannywillems/zcashd/issues" target="_blank" rel="noopener noreferrer" class="footer__link-item">Open an issue<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Upstream</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/zcash/zcash" target="_blank" rel="noopener noreferrer" class="footer__link-item">zcash/zcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/zcash/zcash/tree/v5.5.0-rc1" target="_blank" rel="noopener noreferrer" class="footer__link-item">Pinned tag: v5.5.0-rc1<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/zcash/librustzcash" target="_blank" rel="noopener noreferrer" class="footer__link-item">librustzcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Authoritative references</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://zips.z.cash/protocol/protocol.pdf" target="_blank" rel="noopener noreferrer" class="footer__link-item">Zcash Protocol Specification<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zips.z.cash/" target="_blank" rel="noopener noreferrer" class="footer__link-item">ZIPs index<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zcash.github.io/halo2/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Halo 2 book<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zcash.github.io/orchard/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Orchard book<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">zcashd onboarding course. Source pinned at v5.5.0-rc1.</div></div></div></footer></div>
+</body>
+</html>

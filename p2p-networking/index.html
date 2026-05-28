@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-p2p-networking" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.10.1">
+<title data-rh="true">P2P networking | zcashd onboarding</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://dannywillems.github.io/zcashd/p2p-networking"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="P2P networking | zcashd onboarding"><meta data-rh="true" name="description" content="The Bitcoin-Core-inherited peer-to-peer layer: handshake, addr/addrv2, inv/getdata, block download, mempool relay, bans, and the Bitcoin Core delta zcashd is missing."><meta data-rh="true" property="og:description" content="The Bitcoin-Core-inherited peer-to-peer layer: handshake, addr/addrv2, inv/getdata, block download, mempool relay, bans, and the Bitcoin Core delta zcashd is missing."><link data-rh="true" rel="icon" href="/zcashd/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://dannywillems.github.io/zcashd/p2p-networking"><link data-rh="true" rel="alternate" href="https://dannywillems.github.io/zcashd/p2p-networking" hreflang="en"><link data-rh="true" rel="alternate" href="https://dannywillems.github.io/zcashd/p2p-networking" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"P2P networking","item":"https://dannywillems.github.io/zcashd/p2p-networking"}]}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5EGIE6RDQE0etf4GvjBR1bkf4pcUk2TprLGa0k7/rJkRnCu6WSt6" crossorigin="anonymous"><link rel="stylesheet" href="/zcashd/assets/css/styles.bddee692.css">
+<script src="/zcashd/assets/js/runtime~main.7431a545.js" defer="defer"></script>
+<script src="/zcashd/assets/js/main.0beba01f.js" defer="defer"></script>
+</head>
+<body>
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{const n=new URLSearchParams(window.location.search).entries();for(var[t,e]of n)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}(),document.documentElement.setAttribute("data-announcement-bar-initially-dismissed",function(){try{return"true"===localStorage.getItem("docusaurus.announcement.dismiss")}catch(t){}return!1}())</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><div class="theme-announcement-bar announcementBar_mb4j" style="background-color:#fef3c7;color:#78350f" role="banner"><div class="content_knG7 announcementBarContent_xLdY">This site is automatically generated using Claude Code. Errors may have been introduced. The code is the law, always refer to the source in the <a href="https://github.com/zcash/librustzcash">librustzcash workspace</a>.</div></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/zcashd/"><b class="navbar__title text--truncate">zcashd onboarding</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/zcashd/">Course</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><a href="https://github.com/dannywillems/zcashd/tree/onboarding/onboarding" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Source<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><a href="https://github.com/zcash/zcash" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">zcash/zcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"><div class="navbar__search searchBarContainer_NW3z" dir="ltr"><input placeholder="Search" aria-label="Search" class="navbar__search-input searchInput_YFbd" value=""><div class="loadingRing_RJI3 searchBarLoadingRing_YnHq"><div></div><div></div><div></div><div></div></div></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG menuWithAnnouncementBar_GW3s"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/"><span title="Home" class="linkLabel_WmDU">Home</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/context-and-history"><span title="Context and history" class="linkLabel_WmDU">Context and history</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/build-system"><span title="Build system and contribution loop" class="linkLabel_WmDU">Build system and contribution loop</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/code-organization"><span title="Code organization" class="linkLabel_WmDU">Code organization</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/consensus"><span title="Consensus" class="linkLabel_WmDU">Consensus</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" href="/zcashd/p2p-networking"><span title="P2P networking" class="linkLabel_WmDU">P2P networking</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/cryptography"><span title="Cryptography (non-ZK)" class="linkLabel_WmDU">Cryptography (non-ZK)</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/zk-proofs-and-pools"><span title="zk-SNARKs and shielded pools" class="linkLabel_WmDU">zk-SNARKs and shielded pools</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/wallet-and-rpc"><span title="Wallet and RPC" class="linkLabel_WmDU">Wallet and RPC</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/testing"><span title="Testing" class="linkLabel_WmDU">Testing</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/reading-plan"><span title="Reading plan: six weeks" class="linkLabel_WmDU">Reading plan: six weeks</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/glossary"><span title="Glossary" class="linkLabel_WmDU">Glossary</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/zcashd/external-references"><span title="External references" class="linkLabel_WmDU">External references</span></a></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/zcashd/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">P2P networking</span></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>P2P networking</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-why-this-chapter-exists">1. Why this chapter exists<a href="#1-why-this-chapter-exists" class="hash-link" aria-label="Direct link to 1. Why this chapter exists" title="Direct link to 1. Why this chapter exists" translate="no">​</a></h2>
+<p>The peer-to-peer layer is almost unchanged from Bitcoin Core 0.12.
+Same message names, same handshake, same <code>addr</code>/<code>getaddr</code> discovery,
+same INV-based block and transaction propagation. The Zcash
+modifications are limited to the version-handshake parameters (a
+different protocol version, a Zcash subversion), new service flags,
+and Zcash-specific message handling for shielded transaction sizes.</p>
+<p>If you have read the
+<a href="https://developer.bitcoin.org/reference/p2p_networking.html" target="_blank" rel="noopener noreferrer" class="">Bitcoin P2P docs</a>
+once, you already know 90% of what is here. This chapter fills in
+the Zcash deltas and points to the BIPs zcashd does not implement.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-definitions">2. Definitions<a href="#2-definitions" class="hash-link" aria-label="Direct link to 2. Definitions" title="Direct link to 2. Definitions" translate="no">​</a></h2>
+<p><strong>Definition 5.1 (Peer).</strong> A TCP socket pair <code>(local, remote)</code>
+represented by a <code>CNode</code> instance. A node maintains up to
+<code>DEFAULT_MAX_PEER_CONNECTIONS = 125</code> such instances, split into
+inbound (accepted) and outbound (initiated).</p>
+<p><strong>Definition 5.2 (Address manager).</strong> <code>CAddrMan</code> keeps two tables:
+a &quot;new&quot; table of addresses learned via <code>addr</code> from peers we have
+not successfully connected to, and a &quot;tried&quot; table of addresses we
+have successfully connected to at least once. Each table is a
+fixed-size set of buckets keyed by a salted hash. Persisted to
+<code>peers.dat</code>.</p>
+<p><strong>Definition 5.3 (INV).</strong> An &quot;inventory&quot; announcement of an object
+by hash. <code>inv(type, hash)</code> with <code>type in {MSG_TX, MSG_BLOCK, ...}</code>.
+The receiver requests the object via <code>getdata</code>.</p>
+<p><strong>Definition 5.4 (Misbehaviour score).</strong> A per-peer counter
+incremented by <code>Misbehaving(nodeId, dosScore)</code> on specific
+malformed inputs. Above <code>BANSCORE_THRESHOLD</code> the peer is banned for
+<code>DEFAULT_MISBEHAVING_BANTIME</code> (24h).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-the-code">3. The code<a href="#3-the-code" class="hash-link" aria-label="Direct link to 3. The code" title="Direct link to 3. The code" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="files">Files<a href="#files" class="hash-link" aria-label="Direct link to Files" title="Direct link to Files" translate="no">​</a></h3>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">src/net.h                     CNode, connection model, thread declarations</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/net.cpp                   ~2400 lines; the socket and message plumbing</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/netbase.cpp               CNetAddr/CService, family handling, name resolution</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/addrman.{h,cpp}           known-peer database (tried/new tables)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/addrdb.{h,cpp}            peers.dat persistence</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/protocol.{h,cpp}          NetMsgType:: command-name constants</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/main.cpp                  ProcessMessage(...) and SendMessages(...)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/bloom.{h,cpp}             bloom filter for filterload / merkleblock</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/sync.{h,cpp}              cs_main, cs_vNodes, LOCK macros</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">src/torcontrol.{h,cpp}        optional Tor v3 hidden service support</span><br></div></code></pre></div></div>
+<p><code>CNode</code> is the unit of connection state:</p>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/net.h (CNode header excerpt)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/net.h#L260-L360" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="connection-model">Connection model<a href="#connection-model" class="hash-link" aria-label="Direct link to Connection model" title="Direct link to Connection model" translate="no">​</a></h3>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/net.cpp (StartNode: thread creation)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/net.cpp#L2050-L2150" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<p>A live node has up to 125 peers, split inbound vs outbound. Outbound
+peers are tracked separately for fork detection and ban management.</p>
+<p>Globals:</p>
+<ul>
+<li class=""><code>std::vector&lt;CNode*&gt; vNodes</code> (guarded by <code>cs_vNodes</code>).</li>
+<li class=""><code>CAddrMan addrman</code> (guarded internally; persisted to <code>peers.dat</code>).</li>
+<li class="">The &quot;Banman&quot; equivalent here is the simpler <code>mapBanned</code> (older than
+the Bitcoin Core <code>BanMan</code> class refactor).</li>
+</ul>
+<p>Threads (started in <code>StartNode</code>):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Thread</th><th>Function</th><th>Role</th></tr></thead><tbody><tr><td><code>ThreadSocketHandler</code></td><td>poll sockets, read/write buffers</td><td>the actual select/poll loop</td></tr><tr><td><code>ThreadMessageHandler</code></td><td>call <code>ProcessMessages</code> and <code>SendMessages</code> per peer</td><td>heartbeat of P2P</td></tr><tr><td><code>ThreadOpenConnections</code></td><td>maintain outbound peer count via <code>OpenNetworkConnection</code></td><td>dial out</td></tr><tr><td><code>ThreadOpenAddedConnections</code></td><td>manage <code>-addnode=</code> static peers</td><td>manual peers</td></tr><tr><td><code>ThreadDNSAddressSeed</code></td><td>bootstrap from DNS seeds when addrman is empty</td><td>first-run only</td></tr><tr><td><code>ThreadMapPort</code></td><td>UPnP NAT traversal (optional)</td><td>NAT</td></tr><tr><td><code>ThreadImport</code></td><td>replay block files on startup, reindex if requested</td><td>startup only</td></tr></tbody></table>
+<p>Reading <code>StartNode</code> in <code>src/net.cpp</code> is the fastest way to internalise
+the thread map.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="message-format">Message format<a href="#message-format" class="hash-link" aria-label="Direct link to Message format" title="Direct link to Message format" translate="no">​</a></h3>
+<p>The Bitcoin frame:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">| magic (4) | command (12) | length (4) | checksum (4) | payload (length) |</span><br></div></code></pre></div></div>
+<p><code>magic</code> distinguishes mainnet/testnet/regtest; defined per network in
+<code>src/chainparams.cpp</code>. <code>command</code> is a NUL-padded ASCII string; the
+constants live in <code>src/protocol.h::NetMsgType</code>. <code>checksum</code> is the
+first four bytes of <code>SHA-256(SHA-256(payload))</code>.</p>
+<p>Important commands, in roughly the order they fire on a new connection:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">version, verack          handshake</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">addrv2, addr             gossip of peer addresses</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">ping, pong               keepalive</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">getaddr                  ask for known peers</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">inv, getdata             advertise / request a block or tx by hash</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">tx                       a transaction</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">block                    a block</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">getheaders, headers      header-first sync</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">getblocks                fallback block sync (legacy)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">mempool                  request all txids in peer&#x27;s mempool</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">filterload/clear/add     SPV bloom filter setup</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">merkleblock              SPV partial Merkle block</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">notfound                 negative response to getdata</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">reject                   why a message was rejected (deprecated in BC; still here)</span><br></div></code></pre></div></div>
+<p>zcashd does NOT implement BIP 152 (compact blocks), BIP 157 (compact
+filters), nor BIP 339 (<code>wtxidrelay</code>). Block propagation uses <code>inv</code>
+and <code>getdata</code> with full blocks.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="handshake">Handshake<a href="#handshake" class="hash-link" aria-label="Direct link to Handshake" title="Direct link to Handshake" translate="no">​</a></h3>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/protocol.h (NetMsgType constants)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/protocol.h#L1-L100" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<p>Read <code>ProcessMessage</code> (case <code>NetMsgType::VERSION</code>) and <code>SendMessages</code>
+in
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/main.cpp" target="_blank" rel="noopener noreferrer" class="">src/main.cpp</a>
+for the new-connection path.</p>
+<ol>
+<li class="">Outbound side sends <code>version</code> with its <code>nVersion</code>, services,
+current block height, subversion (<code>&quot;/MagicBean:5.x.x/&quot;</code>), and
+address pair.</li>
+<li class="">Inbound side replies with its own <code>version</code>.</li>
+<li class="">Both sides send <code>verack</code>.</li>
+<li class="">From this point both sides may send <code>addr</code>/<code>getaddr</code>,
+<code>getheaders</code>/<code>sendheaders</code>, and start synchronising blocks.</li>
+</ol>
+<p><code>nVersion</code> checks gate which messages each peer understands. The
+minimum peer version is bumped each time a network upgrade activates
+so that post-NU peers will not waste time talking to
+clearly-incompatible peers.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="address-relay-zip-155--addrv2">Address relay (ZIP-155 / addrv2)<a href="#address-relay-zip-155--addrv2" class="hash-link" aria-label="Direct link to Address relay (ZIP-155 / addrv2)" title="Direct link to Address relay (ZIP-155 / addrv2)" translate="no">​</a></h3>
+<p>zcashd supports <code>addrv2</code> (BIP 155 / partly ZIP-155) for Tor v3, I2P,
+CJDNS addresses. The legacy <code>addr</code> message only carries IPv4/IPv6.
+See:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">MAX_ADDR_TO_SEND = 1000</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">MAX_ADDR_RATE_PER_SECOND = 0.1   (10 addresses/second sustained)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">MAX_ADDR_PROCESSING_TOKEN_BUCKET = MAX_ADDR_TO_SEND</span><br></div></code></pre></div></div>
+<p>The rate limit prevents address-relay flooding.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="inv--getdata-flow">Inv / getdata flow<a href="#inv--getdata-flow" class="hash-link" aria-label="Direct link to Inv / getdata flow" title="Direct link to Inv / getdata flow" translate="no">​</a></h3>
+<p>Transaction propagation:</p>
+<ol>
+<li class="">Node A accepts a new tx into its mempool.</li>
+<li class="">Node A sends <code>inv</code> with the txid to every other peer that does
+not already have it (tracked in <code>CNode::filterInventoryKnown</code>, a
+bloom filter).</li>
+<li class="">Each peer that wants the tx sends <code>getdata</code>.</li>
+<li class="">Node A sends <code>tx</code>.</li>
+</ol>
+<p>Block propagation:</p>
+<ol>
+<li class="">Node A connects a new block to its tip.</li>
+<li class="">Node A sends <code>headers</code> to peers that previously sent
+<code>sendheaders</code> (headers-first peers), and <code>inv(MSG_BLOCK)</code> to the
+rest.</li>
+<li class="">Peers request <code>getdata(MSG_BLOCK)</code> and receive the full block.</li>
+</ol>
+<p>There is no compact-block path. Block propagation is the largest
+single bandwidth cost on the network.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="block-download-and-headers-first-sync">Block download and headers-first sync<a href="#block-download-and-headers-first-sync" class="hash-link" aria-label="Direct link to Block download and headers-first sync" title="Direct link to Block download and headers-first sync" translate="no">​</a></h3>
+<p>When a peer announces a longer header chain, zcashd downloads
+headers first via <code>getheaders</code> (up to 2000 per response). Once the
+header chain is constructed in memory (<code>mapBlockIndex</code>), the node
+downloads blocks out of order from multiple peers in parallel
+(<code>MAX_BLOCKS_IN_TRANSIT_PER_PEER</code>) and connects them in chain order.
+See <code>src/main.cpp::FindNextBlocksToDownload</code> and the
+<code>MarkBlockAsReceived</code>/<code>MarkBlockAsInFlight</code> machinery.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="mempool-propagation">Mempool propagation<a href="#mempool-propagation" class="hash-link" aria-label="Direct link to Mempool propagation" title="Direct link to Mempool propagation" translate="no">​</a></h3>
+<div class="docusaurus-theme-github-codeblock"><div class="language-cpp codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockTitle_OeMC">src/txmempool.h (CTxMemPool interface)</div><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-cpp codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">loading</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><span class="token punctuation" style="color:#393A34">.</span><br></div></code></pre></div></div><div style="font-size:.9em;font-weight:600;color:#0E75DD;text-align:right;padding-bottom:13px;text-decoration:underline"><a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/txmempool.h#L1-L80" class="githubLink" style="margin:0 10px" target="_blank">View on GitHub</a></div></div>
+<p>A new transaction enters via <code>AcceptToMemoryPool</code> in
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/main.cpp" target="_blank" rel="noopener noreferrer" class="">src/main.cpp</a>,
+called from <code>ProcessMessage</code> (<code>case TX</code>) and from
+<code>sendrawtransaction</code>. The acceptance pipeline is approximately:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">CheckTransaction                      # noncontextual</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">ContextualCheckTransaction(...)       # height = chainActive.Height() + 1</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">IsStandardTx(...)                     # mempool policy (not consensus)</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">CheckInputs(...)                      # double-spend, script verification</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">CheckShieldedRequirements(...)        # nullifiers, anchors</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">ProofVerifier::Validate(...)          # zk-SNARK / Halo 2 verification</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">addUnchecked(...)                     # insert into the mempool data structure</span><br></div></code></pre></div></div>
+<p>Mempool limits are enforced by <code>src/mempool_limit.cpp</code> (a weighted
+cost bound, not a simple count). The mempool eviction policy treats
+shielded transactions as more expensive than transparent ones because
+their validation cost is higher.</p>
+<p><code>CTxMemPool::infoAll()</code> and the <code>getrawmempool</code> RPC are the easiest
+ways to inspect mempool state during development.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="misbehaviour-and-bans">Misbehaviour and bans<a href="#misbehaviour-and-bans" class="hash-link" aria-label="Direct link to Misbehaviour and bans" title="Direct link to Misbehaviour and bans" translate="no">​</a></h3>
+<p><code>Misbehaving(nodeId, dosScore)</code> adds to a peer&#x27;s misbehaviour score.
+Above <code>BANSCORE_THRESHOLD</code> the peer is banned for
+<code>DEFAULT_MISBEHAVING_BANTIME</code> (24h). Many <code>Misbehaving</code> calls are
+scattered through <code>ProcessMessage</code> and <code>main.cpp</code> for specific
+malformed inputs.</p>
+<p>There is no IP-based DoS prevention beyond ban and disconnect. If
+floods need to be handled, the OS firewall or <code>-whitelist=</code> is the
+mechanism.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="privacy">Privacy<a href="#privacy" class="hash-link" aria-label="Direct link to Privacy" title="Direct link to Privacy" translate="no">​</a></h3>
+<p>zcashd does not advertise IP via <code>addr</code> if connected over Tor.
+<code>-onlynet=onion</code> restricts to Tor; <code>-listenonion=1</code> runs a hidden
+service. <code>-bind=</code>/<code>-externalip=</code> control what addresses are
+advertised.</p>
+<p>The transaction-origin privacy story is weak: zcashd does no
+Dandelion++, no MIX-based broadcast, and does not delay inv
+announcements (Bitcoin Core does both since 0.21 / Erlay-related
+work). A privacy-conscious user is expected to use Tor for sending.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="bandwidth-and-storage-tuning">Bandwidth and storage tuning<a href="#bandwidth-and-storage-tuning" class="hash-link" aria-label="Direct link to Bandwidth and storage tuning" title="Direct link to Bandwidth and storage tuning" translate="no">​</a></h3>
+<p>Operational knobs explained to operators:</p>
+<ul>
+<li class=""><code>-maxconnections=N</code> (default 125): cap on simultaneous peers.</li>
+<li class=""><code>-maxuploadtarget=N</code> (MiB/24h): cap upstream bandwidth; oldest
+blocks not served once exceeded.</li>
+<li class=""><code>-prune=N</code>: prune blockfiles below N MiB. Disables <code>-rescan</code>.</li>
+<li class=""><code>-dbcache=N</code> (MiB): UTXO cache size. Largest single perf knob.</li>
+<li class=""><code>-par=N</code>: script-verification worker threads.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="where-the-bitcoin-core-delta-hurts">Where the Bitcoin Core delta hurts<a href="#where-the-bitcoin-core-delta-hurts" class="hash-link" aria-label="Direct link to Where the Bitcoin Core delta hurts" title="Direct link to Where the Bitcoin Core delta hurts" translate="no">​</a></h3>
+<p>Several Bitcoin Core security improvements made after the 0.12 fork
+have not been ported. Be aware:</p>
+<ul>
+<li class="">Compact block relay (BIP 152) would significantly reduce
+bandwidth.</li>
+<li class="">BIP 339 wtxid relay would avoid double-fetching segwit transactions
+(less relevant here without segwit).</li>
+<li class="">The <code>BlockManager</code> separation of <code>validation.cpp</code> and
+<code>net_processing.cpp</code> would clean up the entanglement between
+<code>main.cpp</code> and the P2P layer.</li>
+<li class="">The eviction policy for inbound peers in Bitcoin Core is more
+nuanced than zcashd&#x27;s &quot;kick the least useful&quot;.</li>
+<li class="">The <code>addrman</code> deserialisation has had hardening since 0.12 that
+may or may not have been backported.</li>
+</ul>
+<p>ZODL will eventually want to port some of these or write
+replacements. None is consensus-critical, but all are operationally
+important. Survey the current Bitcoin Core <code>src/net_processing.cpp</code>
+before starting any refactor.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-failure-modes">4. Failure modes<a href="#4-failure-modes" class="hash-link" aria-label="Direct link to 4. Failure modes" title="Direct link to 4. Failure modes" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Holding <code>cs_main</code> for too long during message processing.</strong>
+Stalls the entire validation pipeline; long messages produce peer
+timeouts. Caught by: subjective bench testing and (sometimes)
+flaky RPC tests.</li>
+<li class=""><strong>Forgetting to set <code>Misbehaving</code> on a malformed message.</strong> The
+peer continues to consume resources. Caught by: code review,
+occasionally <code>src/test/DoS_tests.cpp</code>.</li>
+<li class=""><strong>Reading wire bytes directly without going through
+<code>serialize.h</code>.</strong> Breaks endianness or size handling. Caught by:
+cross-peer connection tests.</li>
+<li class=""><strong>Treating addrv2 as universal.</strong> Old peers will not understand
+it; the send code must check <code>nVersion</code>. Caught by: peer
+interoperability tests.</li>
+<li class=""><strong>No Dandelion++ means leaking tx origin.</strong> Operator-facing
+problem, not a regression in the protocol layer.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-spec-pointers">5. Spec pointers<a href="#5-spec-pointers" class="hash-link" aria-label="Direct link to 5. Spec pointers" title="Direct link to 5. Spec pointers" translate="no">​</a></h2>
+<ul>
+<li class=""><a href="https://developer.bitcoin.org/reference/p2p_networking.html" target="_blank" rel="noopener noreferrer" class="">Bitcoin reference: P2P network</a>:
+the upstream of most messages here.</li>
+<li class=""><a href="https://github.com/bitcoin/bips/blob/master/bip-0155.mediawiki" target="_blank" rel="noopener noreferrer" class="">BIP 155 (addrv2)</a>.</li>
+<li class=""><a href="https://zips.z.cash/zip-0201" target="_blank" rel="noopener noreferrer" class="">ZIP-201</a>: network peer management
+for nodes.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="6-exercises">6. Exercises<a href="#6-exercises" class="hash-link" aria-label="Direct link to 6. Exercises" title="Direct link to 6. Exercises" translate="no">​</a></h2>
+<ol>
+<li class="">
+<p><strong>Trace a handshake.</strong> Run <code>zcashd -debug=net</code> against a single
+regtest peer and pull the version/verack exchange out of
+<code>debug.log</code>. Match each line to a <code>ProcessMessage</code> case in
+<code>src/main.cpp</code>.</p>
+</li>
+<li class="">
+<p><strong>Identify a missing BIP.</strong> Read Bitcoin Core&#x27;s
+<code>src/net_processing.cpp</code> around <code>cmpctblock</code> handling and confirm
+that zcashd has no equivalent. Why is this less of a problem on
+the Zcash chain than on Bitcoin? Hint: block-time spacing and
+block-size differences.</p>
+</li>
+<li class="">
+<p><strong>Modification exercise.</strong> Add a <code>-debug=netbw</code> flag that prints
+bytes-per-peer-per-minute every 60 seconds. Verify with two
+regtest peers and assorted load.</p>
+</li>
+<li class="">
+<p><strong>Discover an addrman quirk.</strong> Read
+<a href="https://github.com/zcash/zcash/blob/v5.5.0-rc1/src/addrman.h" target="_blank" rel="noopener noreferrer" class="">src/addrman.{h,cpp}</a>
+and identify how it prevents bucket flooding by a single source
+IP. (Answer: the source IP is part of the bucket-key hash.)</p>
+</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="7-further-reading">7. Further reading<a href="#7-further-reading" class="hash-link" aria-label="Direct link to 7. Further reading" title="Direct link to 7. Further reading" translate="no">​</a></h2>
+<ul>
+<li class="">Pieter Wuille&#x27;s
+<a href="https://gist.github.com/sipa/d7dcaae0419f10e5be0270fada84c20b" target="_blank" rel="noopener noreferrer" class="">addrman gist</a>
+on the threat model behind the new/tried table design.</li>
+<li class="">Bitcoin Core&#x27;s
+<a href="https://github.com/bitcoin/bitcoin/blob/master/doc/p2p-overview.md" target="_blank" rel="noopener noreferrer" class="">doc/p2p-overview.md</a>.</li>
+<li class=""><a href="https://github.com/bitcoin/bips/blob/master/bip-0339.mediawiki" target="_blank" rel="noopener noreferrer" class="">BIP 339</a>
+on wtxid relay.</li>
+</ul></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/dannywillems/zcashd/edit/onboarding/onboarding/docs/05-p2p-networking.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/zcashd/consensus"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Consensus</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/zcashd/cryptography"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Cryptography (non-ZK)</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#1-why-this-chapter-exists" class="table-of-contents__link toc-highlight">1. Why this chapter exists</a></li><li><a href="#2-definitions" class="table-of-contents__link toc-highlight">2. Definitions</a></li><li><a href="#3-the-code" class="table-of-contents__link toc-highlight">3. The code</a><ul><li><a href="#files" class="table-of-contents__link toc-highlight">Files</a></li><li><a href="#connection-model" class="table-of-contents__link toc-highlight">Connection model</a></li><li><a href="#message-format" class="table-of-contents__link toc-highlight">Message format</a></li><li><a href="#handshake" class="table-of-contents__link toc-highlight">Handshake</a></li><li><a href="#address-relay-zip-155--addrv2" class="table-of-contents__link toc-highlight">Address relay (ZIP-155 / addrv2)</a></li><li><a href="#inv--getdata-flow" class="table-of-contents__link toc-highlight">Inv / getdata flow</a></li><li><a href="#block-download-and-headers-first-sync" class="table-of-contents__link toc-highlight">Block download and headers-first sync</a></li><li><a href="#mempool-propagation" class="table-of-contents__link toc-highlight">Mempool propagation</a></li><li><a href="#misbehaviour-and-bans" class="table-of-contents__link toc-highlight">Misbehaviour and bans</a></li><li><a href="#privacy" class="table-of-contents__link toc-highlight">Privacy</a></li><li><a href="#bandwidth-and-storage-tuning" class="table-of-contents__link toc-highlight">Bandwidth and storage tuning</a></li><li><a href="#where-the-bitcoin-core-delta-hurts" class="table-of-contents__link toc-highlight">Where the Bitcoin Core delta hurts</a></li></ul></li><li><a href="#4-failure-modes" class="table-of-contents__link toc-highlight">4. Failure modes</a></li><li><a href="#5-spec-pointers" class="table-of-contents__link toc-highlight">5. Spec pointers</a></li><li><a href="#6-exercises" class="table-of-contents__link toc-highlight">6. Exercises</a></li><li><a href="#7-further-reading" class="table-of-contents__link toc-highlight">7. Further reading</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">This course</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/dannywillems/zcashd/tree/onboarding/onboarding" target="_blank" rel="noopener noreferrer" class="footer__link-item">Source on GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/dannywillems/zcashd/issues" target="_blank" rel="noopener noreferrer" class="footer__link-item">Open an issue<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Upstream</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/zcash/zcash" target="_blank" rel="noopener noreferrer" class="footer__link-item">zcash/zcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/zcash/zcash/tree/v5.5.0-rc1" target="_blank" rel="noopener noreferrer" class="footer__link-item">Pinned tag: v5.5.0-rc1<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/zcash/librustzcash" target="_blank" rel="noopener noreferrer" class="footer__link-item">librustzcash<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Authoritative references</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://zips.z.cash/protocol/protocol.pdf" target="_blank" rel="noopener noreferrer" class="footer__link-item">Zcash Protocol Specification<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zips.z.cash/" target="_blank" rel="noopener noreferrer" class="footer__link-item">ZIPs index<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zcash.github.io/halo2/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Halo 2 book<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://zcash.github.io/orchard/" target="_blank" rel="noopener noreferrer" class="footer__link-item">Orchard book<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">zcashd onboarding course. Source pinned at v5.5.0-rc1.</div></div></div></footer></div>
+</body>
+</html>
